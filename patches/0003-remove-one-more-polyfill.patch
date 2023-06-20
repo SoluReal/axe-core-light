@@ -1,0 +1,28 @@
+From b1eeadf2bbba27812660b8c94bd42eacc44b7a5b Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Mon, 19 Jun 2023 22:40:43 +0200
+Subject: [PATCH 3/7] remove one more polyfill
+
+---
+ lib/core/utils/selector-cache.js | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/lib/core/utils/selector-cache.js b/lib/core/utils/selector-cache.js
+index 5f817006..d5e5a03b 100644
+--- a/lib/core/utils/selector-cache.js
++++ b/lib/core/utils/selector-cache.js
+@@ -56,10 +56,7 @@ export function getNodesMatchingExpression(domTree, expressions, filter) {
+     });
+   });
+ 
+-  // Sets in ie11 do not work with Array.from without a polyfill
+-  //(missing `.entries`), but do have forEach
+-  let matchedNodes = [];
+-  nodeSet.forEach(node => matchedNodes.push(node));
++  let matchedNodes = [...nodeSet];
+ 
+   if (filter) {
+     matchedNodes = matchedNodes.filter(filter);
+-- 
+2.37.1 (Apple Git-137.1)
+

@@ -1,0 +1,979 @@
+From d9415e61826f2169b59f12a6bc4d6c1ca48060c3 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Mon, 19 Jun 2023 22:51:57 +0200
+Subject: [PATCH 5/7] remove stuff we dont need
+
+---
+ axe.d.ts                                      |  12 +-
+ build/configure.js                            |  16 --
+ build/tasks/add-locale.js                     |   4 -
+ lib/core/_exposed-for-testing.js              |   2 -
+ lib/core/base/audit.js                        |  75 --------
+ lib/core/public/configure.js                  |   4 -
+ lib/core/public/run-virtual-rule.js           |   7 -
+ lib/core/reporters/helpers/failure-summary.js |  33 ----
+ lib/core/reporters/helpers/index.js           |   3 +-
+ lib/core/reporters/v1.js                      |  11 +-
+ locales/_template.json                        |   1 -
+ test/core/base/audit.js                       |  63 -------
+ test/core/public/configure.js                 | 171 ------------------
+ .../core/reporters/helpers/failure-summary.js | 131 --------------
+ test/core/reporters/v1.js                     |  50 +----
+ test/core/utils/publish-metadata.js           |  61 -------
+ typings/axe-core/axe-core-tests.ts            |   5 -
+ 17 files changed, 4 insertions(+), 645 deletions(-)
+ delete mode 100644 lib/core/reporters/helpers/failure-summary.js
+ delete mode 100644 test/core/reporters/helpers/failure-summary.js
+
+diff --git a/axe.d.ts b/axe.d.ts
+index f771cb36..95997ca0 100644
+--- a/axe.d.ts
++++ b/axe.d.ts
+@@ -152,13 +152,11 @@ declare namespace axe {
+     any: CheckResult[];
+     all: CheckResult[];
+     none: CheckResult[];
+-    failureSummary?: string;
+     element?: HTMLElement;
+   }
+   interface CheckResult {
+     id: string;
+     impact: string;
+-    message: string;
+     data: any;
+     relatedNodes?: RelatedNode[];
+   }
+@@ -219,7 +217,6 @@ declare namespace axe {
+     cssColors?: { [key: string]: number[] };
+   }
+   interface Spec {
+-    branding?: string | Branding;
+     reporter?: ReporterVersion | string | AxeReporter;
+     checks?: Check[];
+     rules?: Rule[];
+@@ -232,13 +229,6 @@ declare namespace axe {
+     // Deprecated - do not use.
+     ver?: string;
+   }
+-  /**
+-   * @deprecated Use branding: string instead to set the application key in help URLs
+-   */
+-  interface Branding {
+-    brand?: string;
+-    application?: string;
+-  }
+   interface Check {
+     id: string;
+     evaluate?: Function | string;
+@@ -400,7 +390,7 @@ declare namespace axe {
+   /**
+    * Method for configuring the data format used by axe. Helpful for adding new
+    * rules, which must be registered with the library to execute.
+-   * @param  {Spec}       Spec Object with valid `branding`, `reporter`, `checks` and `rules` data
++   * @param  {Spec}       Spec Object with valid `reporter`, `checks` and `rules` data
+    */
+   function configure(spec: Spec): void;
+ 
+diff --git a/build/configure.js b/build/configure.js
+index 46bba050..4db8bd4a 100644
+--- a/build/configure.js
++++ b/build/configure.js
+@@ -116,20 +116,6 @@ function buildRules(grunt, options, commons, callback) {
+           }
+         });
+       }
+-      //TODO this is actually failureSummaries, property name should better reflect that
+-      if (result.failureMessage && doTRegex.test(result.failureMessage)) {
+-        result.failureMessage = doT.template(result.failureMessage).toString();
+-      }
+-      return result;
+-    }
+-
+-    function createFailureSummaryObject(summaries) {
+-      var result = {};
+-      summaries.forEach(function (summary) {
+-        if (summary.type) {
+-          result[summary.type] = parseMetaData(summary, 'failureSummaries');
+-        }
+-      });
+       return result;
+     }
+ 
+@@ -388,8 +374,6 @@ ${
+ ${TOC}
+ ${ruleTables}`;
+ 
+-    // Translate failureSummaries
+-    metadata.failureSummaries = createFailureSummaryObject(result.misc);
+     metadata.incompleteFallbackMessage = getIncompleteMsg(result.misc);
+ 
+     callback({
+diff --git a/build/tasks/add-locale.js b/build/tasks/add-locale.js
+index f3845d5a..b4df0769 100644
+--- a/build/tasks/add-locale.js
++++ b/build/tasks/add-locale.js
+@@ -57,10 +57,6 @@ module.exports = function (grunt) {
+               }
+               return out;
+             }, {}),
+-            failureSummaries: result.misc.reduce(function (out, misc) {
+-              out[misc.type] = misc.metadata;
+-              return out;
+-            }, {}),
+             incompleteFallbackMessage: result.misc.reduce(function (out, misc) {
+               return misc.incompleteFallbackMessage
+                 ? misc.incompleteFallbackMessage
+diff --git a/lib/core/_exposed-for-testing.js b/lib/core/_exposed-for-testing.js
+index 7957e2dc..18dc1985 100644
+--- a/lib/core/_exposed-for-testing.js
++++ b/lib/core/_exposed-for-testing.js
+@@ -12,7 +12,6 @@ import Rule from './base/rule';
+ 
+ import { reporters } from './public/reporter';
+ 
+-import failureSummary from './reporters/helpers/failure-summary';
+ import incompleteFallbackMessage from './reporters/helpers/incomplete-fallback-msg';
+ import processAggregate from './reporters/helpers/process-aggregate';
+ 
+@@ -51,7 +50,6 @@ const _thisWillBeDeletedDoNotUse = {
+     reporters
+   },
+   helpers: {
+-    failureSummary,
+     incompleteFallbackMessage,
+     processAggregate
+   },
+diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
+index bcaba5d1..fb9f5de7 100644
+--- a/lib/core/base/audit.js
++++ b/lib/core/base/audit.js
+@@ -132,23 +132,6 @@ const mergeRuleLocale = (a, b) => {
+   };
+ };
+ 
+-/**
+- * Merge two failure messages (a, b), favoring `b`.
+- */
+-
+-const mergeFailureMessage = (a, b) => {
+-  let { failureMessage } = b;
+-  // If the message(s) are Strings, they have not yet been run
+-  // thru doT (which will return a Function).
+-  if (typeof failureMessage === 'string' && dotRegex.test(failureMessage)) {
+-    failureMessage = doT.compile(failureMessage);
+-  }
+-  return {
+-    ...a,
+-    failureMessage: failureMessage || a.failureMessage
+-  };
+-};
+-
+ /**
+  * Merge two incomplete fallback messages (a, b), favoring `b`.
+  */
+@@ -187,7 +170,6 @@ class Audit {
+     const locale = {
+       checks: {},
+       rules: {},
+-      failureSummaries: {},
+       incompleteFallbackMessage: '',
+       lang: this.lang
+     };
+@@ -211,13 +193,6 @@ class Audit {
+       const { description, help } = rule;
+       locale.rules[id] = { description, help };
+     }
+-    const failureSummaries = Object.keys(this.data.failureSummaries);
+-    for (let i = 0; i < failureSummaries.length; i++) {
+-      const type = failureSummaries[i];
+-      const failureSummary = this.data.failureSummaries[type];
+-      const { failureMessage } = failureSummary;
+-      locale.failureSummaries[type] = { failureMessage };
+-    }
+     locale.incompleteFallbackMessage = this.data.incompleteFallbackMessage;
+     this._defaultLocale = locale;
+   }
+@@ -259,22 +234,6 @@ class Audit {
+       this.data.rules[id] = mergeRuleLocale(this.data.rules[id], rules[id]);
+     }
+   }
+-  /**
+-   * Apply locale for the given failureMessage
+-   */
+-  _applyFailureSummaries(messages) {
+-    const keys = Object.keys(messages);
+-    for (let i = 0; i < keys.length; i++) {
+-      const key = keys[i];
+-      if (!this.data.failureSummaries[key]) {
+-        throw new Error(`Locale provided for unknown failureMessage: "${key}"`);
+-      }
+-      this.data.failureSummaries[key] = mergeFailureMessage(
+-        this.data.failureSummaries[key],
+-        messages[key]
+-      );
+-    }
+-  }
+   /**
+    * Apply the given `locale`.
+    *
+@@ -288,9 +247,6 @@ class Audit {
+     if (locale.rules) {
+       this._applyRuleLocale(locale.rules);
+     }
+-    if (locale.failureSummaries) {
+-      this._applyFailureSummaries(locale.failureSummaries, 'failureSummaries');
+-    }
+     if (locale.incompleteFallbackMessage) {
+       this.data.incompleteFallbackMessage = mergeFallbackMessage(
+         this.data.incompleteFallbackMessage,
+@@ -343,8 +299,6 @@ class Audit {
+     this.data = {};
+     this.data.checks = (audit.data && audit.data.checks) || {};
+     this.data.rules = (audit.data && audit.data.rules) || {};
+-    this.data.failureSummaries =
+-      (audit.data && audit.data.failureSummaries) || {};
+     this.data.incompleteFallbackMessage =
+       (audit.data && audit.data.incompleteFallbackMessage) || '';
+   }
+@@ -608,35 +562,6 @@ class Audit {
+     }
+     return options;
+   }
+-  /*
+-   * Updates the default options and then applies them
+-   * @param  {Mixed} options  Options object
+-   */
+-  setBranding(branding) {
+-    const previous = {
+-      brand: this.brand,
+-      application: this.application
+-    };
+-    if (typeof branding === 'string') {
+-      this.application = branding;
+-    }
+-    if (
+-      branding &&
+-      branding.hasOwnProperty('brand') &&
+-      branding.brand &&
+-      typeof branding.brand === 'string'
+-    ) {
+-      this.brand = branding.brand;
+-    }
+-    if (
+-      branding &&
+-      branding.hasOwnProperty('application') &&
+-      branding.application &&
+-      typeof branding.application === 'string'
+-    ) {
+-      this.application = branding.application;
+-    }
+-  }
+   /**
+    * Reset the default rules, checks and meta data
+    */
+diff --git a/lib/core/public/configure.js b/lib/core/public/configure.js
+index 3bd53f72..126cdb8d 100644
+--- a/lib/core/public/configure.js
++++ b/lib/core/public/configure.js
+@@ -93,10 +93,6 @@ function configure(spec) {
+     });
+   }
+ 
+-  if (typeof spec.branding !== 'undefined') {
+-    audit.setBranding(spec.branding);
+-  }
+-
+   if (spec.tagExclude) {
+     audit.tagExclude = spec.tagExclude;
+   }
+diff --git a/lib/core/public/run-virtual-rule.js b/lib/core/public/run-virtual-rule.js
+index 189720f1..d2ece29d 100644
+--- a/lib/core/public/run-virtual-rule.js
++++ b/lib/core/public/run-virtual-rule.js
+@@ -1,6 +1,5 @@
+ import SerialVirtualNode from '../base/virtual-node/serial-virtual-node';
+ import AbstractVirtualNode from '../base/virtual-node/abstract-virtual-node';
+-import * as helpers from '../reporters/helpers';
+ import {
+   publishMetaData,
+   finalizeRuleResult,
+@@ -53,12 +52,6 @@ export default function runVirtualRule(ruleId, vNode, options = {}) {
+   finalizeRuleResult(rawResults);
+   const results = aggregateResult([rawResults]);
+ 
+-  results.violations.forEach(result =>
+-    result.nodes.forEach(nodeResult => {
+-      nodeResult.failureSummary = helpers.failureSummary(nodeResult);
+-    })
+-  );
+-
+   return {
+     ...getEnvironmentData(),
+     ...results,
+diff --git a/lib/core/reporters/helpers/failure-summary.js b/lib/core/reporters/helpers/failure-summary.js
+deleted file mode 100644
+index a35c8554..00000000
+--- a/lib/core/reporters/helpers/failure-summary.js
++++ /dev/null
+@@ -1,33 +0,0 @@
+-/**
+- * Finds failing Checks and combines each help message into an array
+- * @param  {Object} nodeData Individual "detail" object to generate help messages for
+- * @return {String}          failure messages
+- */
+-function failureSummary(nodeData) {
+-  var failingChecks = {};
+-  // combine "all" and "none" as messaging is the same
+-  failingChecks.none = nodeData.none.concat(nodeData.all);
+-  failingChecks.any = nodeData.any;
+-
+-  return Object.keys(failingChecks)
+-    .map(key => {
+-      if (!failingChecks[key].length) {
+-        return;
+-      }
+-
+-      var sum = axe._audit.data.failureSummaries[key];
+-      if (sum && typeof sum.failureMessage === 'function') {
+-        return sum.failureMessage(
+-          failingChecks[key].map(check => {
+-            return check.message || '';
+-          })
+-        );
+-      }
+-    })
+-    .filter(i => {
+-      return i !== undefined;
+-    })
+-    .join('\n\n');
+-}
+-
+-export default failureSummary;
+diff --git a/lib/core/reporters/helpers/index.js b/lib/core/reporters/helpers/index.js
+index 233e3497..32b2298b 100644
+--- a/lib/core/reporters/helpers/index.js
++++ b/lib/core/reporters/helpers/index.js
+@@ -1,5 +1,4 @@
+-import failureSummary from './failure-summary';
+ import incompleteFallbackMessage from './incomplete-fallback-msg';
+ import processAggregate from './process-aggregate';
+ 
+-export { failureSummary, incompleteFallbackMessage, processAggregate };
++export { incompleteFallbackMessage, processAggregate };
+diff --git a/lib/core/reporters/v1.js b/lib/core/reporters/v1.js
+index 10d939cc..15a37836 100644
+--- a/lib/core/reporters/v1.js
++++ b/lib/core/reporters/v1.js
+@@ -1,4 +1,4 @@
+-import { processAggregate, failureSummary } from './helpers';
++import { processAggregate } from './helpers';
+ import { getEnvironmentData } from '../utils';
+ 
+ const v1Reporter = (results, options, callback) => {
+@@ -9,15 +9,6 @@ const v1Reporter = (results, options, callback) => {
+   const { environmentData, ...toolOptions } = options;
+   const out = processAggregate(results, options);
+ 
+-  const addFailureSummaries = result => {
+-    result.nodes.forEach(nodeResult => {
+-      nodeResult.failureSummary = failureSummary(nodeResult);
+-    });
+-  };
+-
+-  out.incomplete.forEach(addFailureSummaries);
+-  out.violations.forEach(addFailureSummaries);
+-
+   callback({
+     ...getEnvironmentData(environmentData),
+     toolOptions,
+diff --git a/locales/_template.json b/locales/_template.json
+index c4ff4925..7bbd0632 100644
+--- a/locales/_template.json
++++ b/locales/_template.json
+@@ -2,6 +2,5 @@
+   "lang": "xyz",
+   "rules": {},
+   "checks": {},
+-  "failureSummaries": {},
+   "incompleteFallbackMessage": "axe couldn't tell the reason. Time to break out the element inspector!"
+ }
+diff --git a/test/core/base/audit.js b/test/core/base/audit.js
+index 10b774f9..ad087a77 100644
+--- a/test/core/base/audit.js
++++ b/test/core/base/audit.js
+@@ -108,49 +108,6 @@ describe('Audit', function () {
+     });
+   });
+ 
+-  describe('Audit#setBranding', function () {
+-    it('should change the brand', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        brand: 'thing'
+-      });
+-      assert.equal(audit.brand, 'thing');
+-      assert.equal(audit.application, 'axeAPI');
+-    });
+-    it('should change the application', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        application: 'thing'
+-      });
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'thing');
+-    });
+-    it('should change the application when passed a string', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding('thing');
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'thing');
+-    });
+-    it('should not replace custom set branding', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      audit.setBranding({
+-        application: 'thing',
+-        brand: 'other'
+-      });
+-    });
+-  });
+-
+   describe('Audit#addRule', function () {
+     it('should override existing rule', function () {
+       var audit = new Audit();
+@@ -216,26 +173,6 @@ describe('Audit', function () {
+       audit.resetRulesAndChecks();
+       assert.equal(audit.lang, 'en');
+     });
+-    it('should reset brand', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      audit.setBranding({
+-        brand: 'test'
+-      });
+-      assert.equal(audit.brand, 'test');
+-      audit.resetRulesAndChecks();
+-      assert.equal(audit.brand, 'axe');
+-    });
+-    it('should reset brand application', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        application: 'test'
+-      });
+-      assert.equal(audit.application, 'test');
+-      audit.resetRulesAndChecks();
+-      assert.equal(audit.application, 'axeAPI');
+-    });
+     it('should reset brand tagExlcude', function () {
+       axe._load({});
+       assert.deepEqual(axe._audit.tagExclude, ['experimental']);
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index f05053b1..7bac065e 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -82,44 +82,6 @@ describe('axe.configure', function () {
+     });
+   });
+ 
+-  it('should call setBranding when passed options', function () {
+-    axe._load({});
+-    axe.configure({
+-      rules: [
+-        {
+-          id: 'bob',
+-          selector: 'pass'
+-        }
+-      ],
+-      branding: {}
+-    });
+-    assert.lengthOf(axe._audit.rules, 1);
+-    axe.configure({
+-      branding: {
+-        application: 'thing',
+-        brand: 'thung'
+-      }
+-    });
+-  });
+-
+-  it('sets branding on newly configured rules', function () {
+-    axe._load({});
+-    axe.configure({
+-      branding: {
+-        application: 'thing',
+-        brand: 'thung'
+-      }
+-    });
+-    axe.configure({
+-      rules: [
+-        {
+-          id: 'bob',
+-          selector: 'pass'
+-        }
+-      ]
+-    });
+-  });
+-
+   it('should allow for overwriting of rules', function () {
+     axe._load({
+       data: {
+@@ -468,127 +430,6 @@ describe('axe.configure', function () {
+       assert.isTrue(typeof localeData.checks.banana.messages.fail === 'string');
+     });
+ 
+-    it('should update failure messages', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            },
+-            none: {
+-              failureMessage: function () {
+-                return 'failed none';
+-              }
+-            }
+-          },
+-          incompleteFallbackMessage: function () {
+-            return 'failed incomplete';
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage: 'foo'
+-            },
+-            none: {
+-              failureMessage: 'bar'
+-            }
+-          },
+-          incompleteFallbackMessage: 'baz'
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(localeData.failureSummaries.any.failureMessage, 'foo');
+-      assert.equal(localeData.failureSummaries.none.failureMessage, 'bar');
+-      assert.equal(localeData.incompleteFallbackMessage, 'baz');
+-    });
+-
+-    it('should merge failure messages', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            },
+-            none: {
+-              failureMessage: function () {
+-                return 'failed none';
+-              }
+-            }
+-          },
+-          incompleteFallbackMessage: function () {
+-            return 'failed incomplete';
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage: 'foo'
+-            }
+-          }
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(localeData.failureSummaries.any.failureMessage, 'foo');
+-      assert.equal(
+-        localeData.failureSummaries.none.failureMessage(),
+-        'failed none'
+-      );
+-      assert.equal(localeData.incompleteFallbackMessage(), 'failed incomplete');
+-    });
+-
+-    it('should not strip newline characters from doT template', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            }
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage:
+-                "Fix any of the following:{{~it:value}}\n  {{=value.split('\\n').join('\\n  ')}}{{~}}"
+-            }
+-          }
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(
+-        localeData.failureSummaries.any.failureMessage(['1', '2', '3']),
+-        'Fix any of the following:\n  1\n  2\n  3'
+-      );
+-    });
+-
+     describe('only given checks', function () {
+       it('should not error', function () {
+         assert.doesNotThrow(function () {
+@@ -735,18 +576,6 @@ describe('axe.configure', function () {
+       }, /unknown check: "nope"/);
+     });
+ 
+-    it('should error when provided an unknown failure summary', function () {
+-      assert.throws(function () {
+-        axe.configure({
+-          locale: {
+-            failureSummaries: {
+-              nope: { failureMessage: 'helpme' }
+-            }
+-          }
+-        });
+-      });
+-    });
+-
+     it('should set default locale', function () {
+       assert.isNull(axe._audit._defaultLocale);
+       axe.configure({
+diff --git a/test/core/reporters/helpers/failure-summary.js b/test/core/reporters/helpers/failure-summary.js
+deleted file mode 100644
+index 2938d447..00000000
+--- a/test/core/reporters/helpers/failure-summary.js
++++ /dev/null
+@@ -1,131 +0,0 @@
+-describe('helpers.failureSummary', function () {
+-  'use strict';
+-  beforeEach(function () {
+-    axe._load({
+-      messages: {},
+-      rules: [],
+-      data: {
+-        failureSummaries: {
+-          none: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix all of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          },
+-          all: {
+-            failureMessage: function anonymous() {
+-              throw new Error('shouldnt be executed');
+-            }
+-          },
+-          any: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix any of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          }
+-        }
+-      }
+-    });
+-  });
+-
+-  it('should concatenate none and all', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [],
+-      all: [
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      none: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        }
+-      ]
+-    });
+-
+-    assert.equal(summary, 'Fix all of the following: \n 1\n 2\n 3\n');
+-  });
+-
+-  it('should return a list of ANYs if none return true', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        },
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      none: [],
+-      all: []
+-    });
+-
+-    assert.equal(summary, 'Fix any of the following: \n 1\n 2\n 3\n');
+-  });
+-
+-  it('should concatenate anys', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        },
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      all: [],
+-      none: [
+-        {
+-          id: '4',
+-          message: '4'
+-        }
+-      ]
+-    });
+-
+-    assert.equal(
+-      summary,
+-      'Fix all of the following: \n 4\n\n\nFix any of the following: \n 1\n 2\n 3\n'
+-    );
+-  });
+-});
+diff --git a/test/core/reporters/v1.js b/test/core/reporters/v1.js
+index ccded897..594bc153 100644
+--- a/test/core/reporters/v1.js
++++ b/test/core/reporters/v1.js
+@@ -133,47 +133,7 @@ describe('reporters - v1', function () {
+     axe._load({
+       messages: {},
+       rules: [],
+-      data: {
+-        failureSummaries: {
+-          none: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix any of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          },
+-          all: {
+-            failureMessage: function anonymous() {
+-              throw new Error('shouldnt be executed');
+-            }
+-          },
+-          any: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix all of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          }
+-        }
+-      }
++      data: {}
+     });
+   });
+ 
+@@ -229,14 +189,6 @@ describe('reporters - v1', function () {
+     axe.getReporter('v1')(runResults, {}, function (results) {
+       assert.ok(results.violations[0].nodes);
+       assert.equal(results.violations[0].nodes.length, 1);
+-      assert.equal(
+-        typeof results.violations[0].nodes[0].failureSummary,
+-        'string'
+-      );
+-      assert.equal(
+-        typeof results.incomplete[0].nodes[0].failureSummary,
+-        'string'
+-      );
+     });
+   });
+   it('should add the target selector array to the node data', function () {
+diff --git a/test/core/utils/publish-metadata.js b/test/core/utils/publish-metadata.js
+index 2f6cdcc1..6fcac603 100644
+--- a/test/core/utils/publish-metadata.js
++++ b/test/core/utils/publish-metadata.js
+@@ -763,67 +763,6 @@ describe('axe.utils.publishMetaData', function () {
+     });
+   });
+ 
+-  it('should not modify base configuration', function () {
+-    axe._load({
+-      rules: [],
+-      data: {
+-        rules: {
+-          cats: {
+-            help: function () {
+-              return 'cats-rule';
+-            }
+-          }
+-        },
+-        checks: {
+-          'cats-PASS': {
+-            failureMessage: function () {
+-              return 'cats-check';
+-            }
+-          },
+-          'cats-ANY': {
+-            failureMessage: function () {
+-              return 'cats-check2';
+-            }
+-          },
+-          'cats-ALL': {
+-            failureMessage: function () {
+-              return 'cats-check2';
+-            }
+-          }
+-        }
+-      }
+-    });
+-    axe.utils.publishMetaData({
+-      id: 'cats',
+-      nodes: [
+-        {
+-          any: [
+-            {
+-              result: false,
+-              id: 'cats-PASS'
+-            }
+-          ],
+-          none: [
+-            {
+-              result: true,
+-              id: 'cats-FAIL'
+-            }
+-          ],
+-          all: [
+-            {
+-              result: false,
+-              id: 'cats-ALL'
+-            }
+-          ]
+-        }
+-      ]
+-    });
+-
+-    assert.isNotNull(axe._audit.data.checks['cats-PASS'].failureMessage);
+-    assert.isNotNull(axe._audit.data.checks['cats-ANY'].failureMessage);
+-    assert.isNotNull(axe._audit.data.checks['cats-ALL'].failureMessage);
+-  });
+-
+   it('should pull tags off rule object', function () {
+     var expected = {
+       foo: 'bar',
+diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
+index 1475d75a..23ddd45f 100644
+--- a/typings/axe-core/axe-core-tests.ts
++++ b/typings/axe-core/axe-core-tests.ts
+@@ -12,7 +12,6 @@ axe.run(context, {}, (error: Error, results: axe.AxeResults) => {
+   console.log(results.incomplete.length);
+   console.log(results.inapplicable.length);
+   console.log(results.violations.length);
+-  console.log(results.violations[0].nodes[0].failureSummary);
+ });
+ axe.run().then(function (done: any) {
+   done();
+@@ -213,10 +212,6 @@ axe.run(context, options, (error: Error, results: axe.AxeResults) => {
+ 
+ // axe.configure
+ var spec: axe.Spec = {
+-  branding: {
+-    brand: 'foo',
+-    application: 'bar'
+-  },
+   reporter: 'v1',
+   checks: [
+     {
+-- 
+2.37.1 (Apple Git-137.1)
+

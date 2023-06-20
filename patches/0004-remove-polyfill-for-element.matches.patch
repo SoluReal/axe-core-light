@@ -1,0 +1,139 @@
+From b25fb8ec181d756a9faf9276a9e45454103e2ff8 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Mon, 19 Jun 2023 22:43:45 +0200
+Subject: [PATCH 4/7] remove polyfill for element.matches.
+
+---
+ lib/core/utils/element-matches.js  | 34 +--------------
+ test/core/utils/element-matches.js | 70 ------------------------------
+ 2 files changed, 2 insertions(+), 102 deletions(-)
+ delete mode 100644 test/core/utils/element-matches.js
+
+diff --git a/lib/core/utils/element-matches.js b/lib/core/utils/element-matches.js
+index bad802d4..e58ad15c 100644
+--- a/lib/core/utils/element-matches.js
++++ b/lib/core/utils/element-matches.js
+@@ -1,42 +1,12 @@
+ /**
+- * Polyfill for Element#matches
++ * Element#matches
+  * @param {HTMLElement} node The element to test
+  * @param {String} selector The selector to test element against
+  * @return {Boolean}
+  */
+ const matchesSelector = (() => {
+-  var method;
+-
+-  function getMethod(node) {
+-    var index,
+-      candidate,
+-      candidates = [
+-        'matches',
+-        'matchesSelector',
+-        'mozMatchesSelector',
+-        'webkitMatchesSelector',
+-        'msMatchesSelector'
+-      ],
+-      length = candidates.length;
+-
+-    for (index = 0; index < length; index++) {
+-      candidate = candidates[index];
+-      if (node[candidate]) {
+-        return candidate;
+-      }
+-    }
+-  }
+-
+   return (node, selector) => {
+-    if (!method || !node[method]) {
+-      method = getMethod(node);
+-    }
+-
+-    if (node[method]) {
+-      return node[method](selector);
+-    }
+-
+-    return false;
++    return node.matches(selector);
+   };
+ })();
+ 
+diff --git a/test/core/utils/element-matches.js b/test/core/utils/element-matches.js
+deleted file mode 100644
+index 728f5994..00000000
+--- a/test/core/utils/element-matches.js
++++ /dev/null
+@@ -1,70 +0,0 @@
+-describe('utils.matchesSelector', function () {
+-  'use strict';
+-  var matchesSelector = axe.utils.matchesSelector;
+-
+-  function mockMethod(method, returnValue) {
+-    var result = {};
+-    result[method] = function () {
+-      return returnValue;
+-    };
+-    result.ownerDocument = {
+-      defaultView: {
+-        Element: {
+-          prototype: {}
+-        }
+-      }
+-    };
+-    result.ownerDocument.defaultView.Element.prototype[method] = function () {};
+-
+-    return result;
+-  }
+-
+-  it('should check the prototype of the Element object for matching methods', function () {
+-    assert.equal(matchesSelector(mockMethod('matches', 'test1')), 'test1');
+-    assert.equal(
+-      matchesSelector(mockMethod('matchesSelector', 'test2')),
+-      'test2'
+-    );
+-    assert.equal(
+-      matchesSelector(mockMethod('mozMatchesSelector', 'test3')),
+-      'test3'
+-    );
+-    assert.equal(
+-      matchesSelector(mockMethod('webkitMatchesSelector', 'test4')),
+-      'test4'
+-    );
+-    assert.equal(
+-      matchesSelector(mockMethod('msMatchesSelector', 'test5')),
+-      'test5'
+-    );
+-  });
+-
+-  it('should actually work', function () {
+-    var target,
+-      fixture = document.getElementById('fixture');
+-
+-    fixture.innerHTML = '<div id="test">Hi</div>';
+-    target = document.getElementById('test');
+-    assert.ok(matchesSelector(target, '#test'));
+-
+-    fixture.innerHTML = '';
+-  });
+-
+-  it('should return false if the element does not have a matching method', function () {
+-    var target,
+-      fixture = document.getElementById('fixture');
+-
+-    fixture.innerHTML = '<div id="test">Hi</div>';
+-    target = document.getElementById('test');
+-
+-    target.matches = null;
+-    target.matchesSelector = null;
+-    target.mozMatchesSelector = null;
+-    target.webkitMatchesSelector = null;
+-    target.msMatchesSelector = null;
+-
+-    assert.isFalse(matchesSelector(target, '#test'));
+-
+-    fixture.innerHTML = '';
+-  });
+-});
+-- 
+2.37.1 (Apple Git-137.1)
+
