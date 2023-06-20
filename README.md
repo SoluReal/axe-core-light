@@ -8,7 +8,7 @@ This repository contains patches and a build script to create a smaller version 
 This project is used by [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker) to decrease both the size of `axe.min.js` as well as the output of axe-core.
 
 Because the Accessibility report is passed via websockets, it makes sense to remove some of the unnecessary data.
-For [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker), only the id's since we provide our own translation and extensive documentation.
+For [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker) no messages and translations are needed because we provide our own.s
 
 ## Patches
 
@@ -17,7 +17,7 @@ The patches make the following adjustments:
 * Remove all polyfills
 * Support only the latest Chrome version
 * Remove [description, help, help_url and messages](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) from the output.
-* Remove metadata (url, timestamp, performance data)
+* Remove metadata (url, timestamp, performance stats)
 
 ## Result
 
