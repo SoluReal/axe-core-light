@@ -1,0 +1,61 @@
+From b77a9d40f7e03b4e83eceb48651d40e74e4d0337 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:18:43 +0200
+Subject: [PATCH] remove setBranding tests
+
+---
+ test/core/public/configure.js | 38 -----------------------------------
+ 1 file changed, 38 deletions(-)
+
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index 8d18cbf..e4b574d 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -82,44 +82,6 @@ describe('axe.configure', function () {
+     });
+   });
+ 
+-  it('should call setBranding when passed options', function () {
+-    axe._load({});
+-    axe.configure({
+-      rules: [
+-        {
+-          id: 'bob',
+-          selector: 'pass'
+-        }
+-      ],
+-      branding: {}
+-    });
+-    assert.lengthOf(axe._audit.rules, 1);
+-    axe.configure({
+-      branding: {
+-        application: 'thing',
+-        brand: 'thung'
+-      }
+-    });
+-  });
+-
+-  it('sets branding on newly configured rules', function () {
+-    axe._load({});
+-    axe.configure({
+-      branding: {
+-        application: 'thing',
+-        brand: 'thung'
+-      }
+-    });
+-    axe.configure({
+-      rules: [
+-        {
+-          id: 'bob',
+-          selector: 'pass'
+-        }
+-      ]
+-    });
+-  });
+-
+   it('should allow for overwriting of rules', function () {
+     axe._load({
+       data: {
+-- 
+2.39.2 (Apple Git-143)
+

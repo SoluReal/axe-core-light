@@ -1,0 +1,29 @@
+From 8659e5932c8fff5cd0bcac442079aa46b889f140 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:38:51 +0200
+Subject: [PATCH] remove test for incompleteFallbackMessage
+
+---
+ test/core/reporters/helpers/incomplete-fallback-msg.js | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/test/core/reporters/helpers/incomplete-fallback-msg.js b/test/core/reporters/helpers/incomplete-fallback-msg.js
+index 52bf0d6..1dabcc2 100644
+--- a/test/core/reporters/helpers/incomplete-fallback-msg.js
++++ b/test/core/reporters/helpers/incomplete-fallback-msg.js
+@@ -1,12 +1,6 @@
+ describe('helpers.incompleteFallbackMessage', function () {
+   'use strict';
+ 
+-  it('returns a non-empty string by default', function () {
+-    var summary = helpers.incompleteFallbackMessage();
+-    assert.typeOf(summary, 'string');
+-    assert.notEqual(summary, '');
+-  });
+-
+   it('should return a string', function () {
+     axe._load({
+       messages: {},
+-- 
+2.39.2 (Apple Git-143)
+

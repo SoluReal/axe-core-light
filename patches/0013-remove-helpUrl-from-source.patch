@@ -1,0 +1,167 @@
+From a03ac716a45253ee6ab0189ee95aaaa1666812c2 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:41:40 +0200
+Subject: [PATCH] remove helpUrl from source
+
+---
+ lib/core/base/audit.js        | 36 -----------------------------------
+ lib/core/constants.js         |  1 -
+ lib/core/public/configure.js  |  2 --
+ lib/core/public/get-rules.js  |  1 -
+ test/core/public/run-rules.js | 17 -----------------
+ 5 files changed, 57 deletions(-)
+
+diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
+index b8aee7d..4656be5 100644
+--- a/lib/core/base/audit.js
++++ b/lib/core/base/audit.js
+@@ -354,7 +354,6 @@ class Audit {
+       (audit.data && audit.data.failureSummaries) || {};
+     this.data.incompleteFallbackMessage =
+       (audit.data && audit.data.incompleteFallbackMessage) || '';
+-    this._constructHelpUrls(); // create default helpUrls
+   }
+   /**
+    * Adds a new command to the audit
+@@ -644,24 +643,6 @@ class Audit {
+     ) {
+       this.application = branding.application;
+     }
+-    this._constructHelpUrls(previous);
+-  }
+-  _constructHelpUrls(previous = null) {
+-    // TODO: es-modules-version
+-    var version = (axe.version.match(/^[1-9][0-9]*\.[0-9]+/) || ['x.y'])[0];
+-    this.rules.forEach(rule => {
+-      if (!this.data.rules[rule.id]) {
+-        this.data.rules[rule.id] = {};
+-      }
+-      const metaData = this.data.rules[rule.id];
+-      if (
+-        typeof metaData.helpUrl !== 'string' ||
+-        (previous &&
+-          metaData.helpUrl === getHelpUrl(previous, rule.id, version))
+-      ) {
+-        metaData.helpUrl = getHelpUrl(this, rule.id, version);
+-      }
+-    });
+   }
+   /**
+    * Reset the default rules, checks and meta data
+@@ -761,21 +742,4 @@ function getDefferedRule(rule, context, options) {
+   };
+ }
+ 
+-/**
+- * For all the rules, create the helpUrl and add it to the data for that rule
+- */
+-function getHelpUrl({ brand, application, lang }, ruleId, version) {
+-  return (
+-    constants.helpUrlBase +
+-    brand +
+-    '/' +
+-    (version || axe.version.substring(0, axe.version.lastIndexOf('.'))) +
+-    '/' +
+-    ruleId +
+-    '?application=' +
+-    encodeURIComponent(application) +
+-    (lang && lang !== 'en' ? '&lang=' + encodeURIComponent(lang) : '')
+-  );
+-}
+-
+ export default Audit;
+diff --git a/lib/core/constants.js b/lib/core/constants.js
+index 3880c0a..b42c472 100644
+--- a/lib/core/constants.js
++++ b/lib/core/constants.js
+@@ -26,7 +26,6 @@ const definitions = [
+ ];
+ 
+ const constants = {
+-  helpUrlBase: 'https://dequeuniversity.com/rules/',
+   gridSize: 200,
+   results: [],
+   resultGroups: [],
+diff --git a/lib/core/public/configure.js b/lib/core/public/configure.js
+index cbd6424..3bd53f7 100644
+--- a/lib/core/public/configure.js
++++ b/lib/core/public/configure.js
+@@ -95,8 +95,6 @@ function configure(spec) {
+ 
+   if (typeof spec.branding !== 'undefined') {
+     audit.setBranding(spec.branding);
+-  } else {
+-    audit._constructHelpUrls();
+   }
+ 
+   if (spec.tagExclude) {
+diff --git a/lib/core/public/get-rules.js b/lib/core/public/get-rules.js
+index d52216f..e4ede8f 100644
+--- a/lib/core/public/get-rules.js
++++ b/lib/core/public/get-rules.js
+@@ -20,7 +20,6 @@ function getRules(tags) {
+       ruleId: matchingRule.id,
+       description: rd.description,
+       help: rd.help,
+-      helpUrl: rd.helpUrl,
+       tags: matchingRule.tags,
+       actIds: matchingRule.actIds
+     };
+diff --git a/test/core/public/run-rules.js b/test/core/public/run-rules.js
+index 778b236..32dc282 100644
+--- a/test/core/public/run-rules.js
++++ b/test/core/public/run-rules.js
+@@ -1,6 +1,5 @@
+ describe('runRules', function () {
+   'use strict';
+-  var ver = axe.version.substring(0, axe.version.lastIndexOf('.'));
+ 
+   function iframeReady(src, context, id, cb) {
+     var i = document.createElement('iframe');
+@@ -204,10 +203,6 @@ describe('runRules', function () {
+               assert.deepEqual(JSON.parse(JSON.stringify(results)), [
+                 {
+                   id: 'div#target',
+-                  helpUrl:
+-                    'https://dequeuniversity.com/rules/axe/' +
+-                    ver +
+-                    '/div#target?application=axeAPI',
+                   pageLevel: false,
+                   impact: null,
+                   inapplicable: [],
+@@ -246,10 +241,6 @@ describe('runRules', function () {
+                 },
+                 {
+                   id: 'first-div',
+-                  helpUrl:
+-                    'https://dequeuniversity.com/rules/axe/' +
+-                    ver +
+-                    '/first-div?application=axeAPI',
+                   pageLevel: false,
+                   impact: null,
+                   inapplicable: [],
+@@ -517,10 +508,6 @@ describe('runRules', function () {
+           assert.deepEqual(JSON.parse(JSON.stringify(results)), [
+             {
+               id: 'div#target',
+-              helpUrl:
+-                'https://dequeuniversity.com/rules/axe/' +
+-                ver +
+-                '/div#target?application=axeAPI',
+               pageLevel: false,
+               foo: 'bar',
+               stuff: 'blah',
+@@ -560,10 +547,6 @@ describe('runRules', function () {
+             },
+             {
+               id: 'first-div',
+-              helpUrl:
+-                'https://dequeuniversity.com/rules/axe/' +
+-                ver +
+-                '/first-div?application=axeAPI',
+               pageLevel: false,
+               bar: 'foo',
+               stuff: 'no',
+-- 
+2.39.2 (Apple Git-143)
+

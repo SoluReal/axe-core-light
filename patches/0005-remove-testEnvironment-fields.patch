@@ -1,0 +1,77 @@
+From 43f8d3019bff0598ced156fa602a7836fe5638ec Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:16:22 +0200
+Subject: [PATCH] remove testEnvironment fields.
+
+---
+ lib/core/utils/get-environment-data.js  | 28 -------------------------
+ test/core/utils/get-environment-data.js | 14 -------------
+ 2 files changed, 42 deletions(-)
+
+diff --git a/lib/core/utils/get-environment-data.js b/lib/core/utils/get-environment-data.js
+index 61c3da7..1c79417 100644
+--- a/lib/core/utils/get-environment-data.js
++++ b/lib/core/utils/get-environment-data.js
+@@ -10,34 +10,6 @@ export default function getEnvironmentData(metadata = null, win = window) {
+   }
+ 
+   return {
+-    testEngine: {
+-      name: 'axe-core',
+-      version: axe.version
+-    },
+-    testRunner: {
+-      name: axe._audit.brand
+-    },
+-    testEnvironment: getTestEnvironment(win),
+-    timestamp: new Date().toISOString(),
+     url: win.location?.href
+   };
+ }
+-
+-function getTestEnvironment(win) {
+-  if (!win.navigator || typeof win.navigator !== 'object') {
+-    return {};
+-  }
+-  const { navigator, innerHeight, innerWidth } = win;
+-  const { angle, type } = getOrientation(win) || {};
+-  return {
+-    userAgent: navigator.userAgent,
+-    windowWidth: innerWidth,
+-    windowHeight: innerHeight,
+-    orientationAngle: angle,
+-    orientationType: type
+-  };
+-}
+-
+-function getOrientation({ screen }) {
+-  return screen.orientation || screen.msOrientation || screen.mozOrientation;
+-}
+diff --git a/test/core/utils/get-environment-data.js b/test/core/utils/get-environment-data.js
+index 7e5d09d..9b4a2d8 100644
+--- a/test/core/utils/get-environment-data.js
++++ b/test/core/utils/get-environment-data.js
+@@ -50,20 +50,6 @@ describe('utils.getEnvironmentData', function () {
+ 
+     delete data.timestamp;
+     assert.deepEqual(data, {
+-      testEngine: {
+-        name: 'axe-core',
+-        version: axe.version
+-      },
+-      testRunner: {
+-        name: axe._audit.brand
+-      },
+-      testEnvironment: {
+-        userAgent: 'foo',
+-        windowWidth: 321,
+-        windowHeight: 123,
+-        orientationAngle: 'slanted',
+-        orientationType: 'fictional'
+-      },
+       url: 'foo://'
+     });
+   });
+-- 
+2.39.2 (Apple Git-143)
+

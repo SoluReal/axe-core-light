@@ -1,0 +1,59 @@
+From c62b7c69b9e16008cd6d6918c1a24fc6c555fbd4 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:38:43 +0200
+Subject: [PATCH] remove helpUrl and description from aggregateResult.js
+
+---
+ test/core/utils/aggregateResult.js | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/test/core/utils/aggregateResult.js b/test/core/utils/aggregateResult.js
+index 5eb70d9..99d9290 100644
+--- a/test/core/utils/aggregateResult.js
++++ b/test/core/utils/aggregateResult.js
+@@ -5,8 +5,6 @@ describe('axe.utils.aggregateResult', function () {
+     _results = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         tags: ['tag1'],
+         result: 'passed',
+         violations: [],
+@@ -31,7 +29,6 @@ describe('axe.utils.aggregateResult', function () {
+       },
+       {
+         id: 'bypass',
+-        description: 'something even more nifty',
+         tags: ['tag3'],
+         impact: 'monkeys',
+         result: 'failed',
+@@ -58,7 +55,6 @@ describe('axe.utils.aggregateResult', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -121,7 +117,6 @@ describe('axe.utils.aggregateResult', function () {
+       },
+       {
+         id: 'blinky',
+-        description: 'something awesome',
+         tags: ['tag4'],
+         result: 'inapplicable',
+         passes: [
+@@ -207,9 +202,5 @@ describe('axe.utils.aggregateResult', function () {
+     assert.lengthOf(resultObject.inapplicable, 1);
+ 
+     assert.equal(resultObject.inapplicable[0].id, input[0].id);
+-    assert.equal(
+-      resultObject.inapplicable[0].description,
+-      input[0].description
+-    );
+   });
+ });
+-- 
+2.39.2 (Apple Git-143)
+

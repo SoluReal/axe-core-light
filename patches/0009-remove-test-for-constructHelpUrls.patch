@@ -1,0 +1,181 @@
+From acd022e12db02cc5048ba8b5e6fa9de3166036ab Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:36:19 +0200
+Subject: [PATCH] remove test for constructHelpUrls
+
+---
+ test/core/base/audit.js | 158 ----------------------------------------
+ 1 file changed, 158 deletions(-)
+
+diff --git a/test/core/base/audit.js b/test/core/base/audit.js
+index 7a9dfd5..c09ec67 100644
+--- a/test/core/base/audit.js
++++ b/test/core/base/audit.js
+@@ -108,164 +108,6 @@ describe('Audit', function () {
+     });
+   });
+ 
+-  describe('Audit#_constructHelpUrls', function () {
+-    it('should create default help URLS', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit._constructHelpUrls();
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/axe/' +
+-          ver +
+-          '/target?application=axeAPI'
+-      });
+-    });
+-    it('should use changed branding', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit.brand = 'thing';
+-      audit._constructHelpUrls();
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/thing/' +
+-          ver +
+-          '/target?application=axeAPI'
+-      });
+-    });
+-    it('should use changed application', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit.application = 'thing';
+-      audit._constructHelpUrls();
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/axe/' +
+-          ver +
+-          '/target?application=thing'
+-      });
+-    });
+-
+-    it('does not override helpUrls of different products', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target1',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob',
+-        metadata: {
+-          helpUrl:
+-            'https://dequeuniversity.com/rules/myproject/' +
+-            ver +
+-            '/target1?application=axeAPI'
+-        }
+-      });
+-      audit.addRule({
+-        id: 'target2',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-
+-      assert.equal(
+-        audit.data.rules.target1.helpUrl,
+-        'https://dequeuniversity.com/rules/myproject/' +
+-          ver +
+-          '/target1?application=axeAPI'
+-      );
+-      assert.isUndefined(audit.data.rules.target2);
+-
+-      assert.lengthOf(audit.rules, 2);
+-      audit.brand = 'thing';
+-      audit._constructHelpUrls();
+-
+-      assert.equal(
+-        audit.data.rules.target1.helpUrl,
+-        'https://dequeuniversity.com/rules/myproject/' +
+-          ver +
+-          '/target1?application=axeAPI'
+-      );
+-      assert.equal(
+-        audit.data.rules.target2.helpUrl,
+-        'https://dequeuniversity.com/rules/thing/' +
+-          ver +
+-          '/target2?application=axeAPI'
+-      );
+-    });
+-    it('understands prerelease type version numbers', function () {
+-      var tempVersion = axe.version;
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-
+-      axe.version = '3.2.1-alpha.0';
+-      audit._constructHelpUrls();
+-
+-      axe.version = tempVersion;
+-      assert.equal(
+-        audit.data.rules.target.helpUrl,
+-        'https://dequeuniversity.com/rules/axe/3.2/target?application=axeAPI'
+-      );
+-    });
+-
+-    it('matches major release versions', function () {
+-      var tempVersion = axe.version;
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-
+-      axe.version = '1.0.0';
+-      audit._constructHelpUrls();
+-
+-      axe.version = tempVersion;
+-      assert.equal(
+-        audit.data.rules.target.helpUrl,
+-        'https://dequeuniversity.com/rules/axe/1.0/target?application=axeAPI'
+-      );
+-    });
+-    it('sets the lang query if locale has been set', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      audit.applyLocale({
+-        lang: 'de'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit._constructHelpUrls();
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/axe/' +
+-          ver +
+-          '/target?application=axeAPI&lang=de'
+-      });
+-    });
+-  });
+-
+   describe('Audit#setBranding', function () {
+     it('should change the brand', function () {
+       var audit = new Audit();
+-- 
+2.39.2 (Apple Git-143)
+

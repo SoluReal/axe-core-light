@@ -1,0 +1,83 @@
+From 99d8671357bc1f85f3134281d6608ba27606bc20 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:37:17 +0200
+Subject: [PATCH] remove more constructHelpUrl tests
+
+---
+ test/core/base/audit.js | 60 -----------------------------------------
+ 1 file changed, 60 deletions(-)
+
+diff --git a/test/core/base/audit.js b/test/core/base/audit.js
+index c09ec67..3498ba1 100644
+--- a/test/core/base/audit.js
++++ b/test/core/base/audit.js
+@@ -137,66 +137,6 @@ describe('Audit', function () {
+       assert.equal(audit.brand, 'axe');
+       assert.equal(audit.application, 'thing');
+     });
+-    it('should call _constructHelpUrls', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit.setBranding({
+-        application: 'thing'
+-      });
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/axe/' +
+-          ver +
+-          '/target?application=thing'
+-      });
+-    });
+-    it('should call _constructHelpUrls even when nothing changed', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob'
+-      });
+-      assert.lengthOf(audit.rules, 1);
+-      assert.equal(audit.data.rules.target, undefined);
+-      audit.setBranding(undefined);
+-      assert.deepEqual(audit.data.rules.target, {
+-        helpUrl:
+-          'https://dequeuniversity.com/rules/axe/' +
+-          ver +
+-          '/target?application=axeAPI'
+-      });
+-    });
+-    it('should not replace custom set branding', function () {
+-      var audit = new Audit();
+-      audit.addRule({
+-        id: 'target',
+-        matches: 'function () {return "hello";}',
+-        selector: 'bob',
+-        metadata: {
+-          helpUrl:
+-            'https://dequeuniversity.com/rules/customer-x/' +
+-            ver +
+-            '/target?application=axeAPI'
+-        }
+-      });
+-      audit.setBranding({
+-        application: 'thing',
+-        brand: 'other'
+-      });
+-      assert.equal(
+-        audit.data.rules.target.helpUrl,
+-        'https://dequeuniversity.com/rules/customer-x/' +
+-          ver +
+-          '/target?application=axeAPI'
+-      );
+-    });
+   });
+ 
+   describe('Audit#addRule', function () {
+-- 
+2.39.2 (Apple Git-143)
+

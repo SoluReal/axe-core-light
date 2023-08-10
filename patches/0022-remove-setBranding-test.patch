@@ -1,0 +1,54 @@
+From 50055ce2a7393346af16eb0bd27578889e14aba0 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:17:01 +0200
+Subject: [PATCH] remove setBranding test
+
+---
+ test/core/base/audit.js | 31 -------------------------------
+ 1 file changed, 31 deletions(-)
+
+diff --git a/test/core/base/audit.js b/test/core/base/audit.js
+index 3498ba1..59c9048 100644
+--- a/test/core/base/audit.js
++++ b/test/core/base/audit.js
+@@ -108,37 +108,6 @@ describe('Audit', function () {
+     });
+   });
+ 
+-  describe('Audit#setBranding', function () {
+-    it('should change the brand', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        brand: 'thing'
+-      });
+-      assert.equal(audit.brand, 'thing');
+-      assert.equal(audit.application, 'axeAPI');
+-    });
+-    it('should change the application', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        application: 'thing'
+-      });
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'thing');
+-    });
+-    it('should change the application when passed a string', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding('thing');
+-      assert.equal(audit.brand, 'axe');
+-      assert.equal(audit.application, 'thing');
+-    });
+-  });
+-
+   describe('Audit#addRule', function () {
+     it('should override existing rule', function () {
+       var audit = new Audit();
+-- 
+2.39.2 (Apple Git-143)
+

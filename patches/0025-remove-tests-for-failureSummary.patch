@@ -1,0 +1,268 @@
+From 24f07be12d260f43766fc86f5de3c9d1020641fa Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:20:28 +0200
+Subject: [PATCH] remove tests for failureSummary.
+
+---
+ test/core/public/configure.js                 |  99 -------------
+ .../core/reporters/helpers/failure-summary.js | 131 ------------------
+ 2 files changed, 230 deletions(-)
+ delete mode 100644 test/core/reporters/helpers/failure-summary.js
+
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index e4b574d..f5eab7c 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -426,93 +426,6 @@ describe('axe.configure', function () {
+       assert.isTrue(typeof localeData.checks.banana.messages.fail === 'string');
+     });
+ 
+-    it('should update failure messages', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            },
+-            none: {
+-              failureMessage: function () {
+-                return 'failed none';
+-              }
+-            }
+-          },
+-          incompleteFallbackMessage: function () {
+-            return 'failed incomplete';
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage: 'foo'
+-            },
+-            none: {
+-              failureMessage: 'bar'
+-            }
+-          },
+-          incompleteFallbackMessage: 'baz'
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(localeData.failureSummaries.any.failureMessage, 'foo');
+-      assert.equal(localeData.failureSummaries.none.failureMessage, 'bar');
+-      assert.equal(localeData.incompleteFallbackMessage, 'baz');
+-    });
+-
+-    it('should merge failure messages', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            },
+-            none: {
+-              failureMessage: function () {
+-                return 'failed none';
+-              }
+-            }
+-          },
+-          incompleteFallbackMessage: function () {
+-            return 'failed incomplete';
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage: 'foo'
+-            }
+-          }
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(localeData.failureSummaries.any.failureMessage, 'foo');
+-      assert.equal(
+-        localeData.failureSummaries.none.failureMessage(),
+-        'failed none'
+-      );
+-      assert.equal(localeData.incompleteFallbackMessage(), 'failed incomplete');
+-    });
+-
+     it('should not strip newline characters from doT template', function () {
+       axe._load({
+         data: {
+@@ -693,18 +606,6 @@ describe('axe.configure', function () {
+       }, /unknown check: "nope"/);
+     });
+ 
+-    it('should error when provided an unknown failure summary', function () {
+-      assert.throws(function () {
+-        axe.configure({
+-          locale: {
+-            failureSummaries: {
+-              nope: { failureMessage: 'helpme' }
+-            }
+-          }
+-        });
+-      });
+-    });
+-
+     it('should set default locale', function () {
+       assert.isNull(axe._audit._defaultLocale);
+       axe.configure({
+diff --git a/test/core/reporters/helpers/failure-summary.js b/test/core/reporters/helpers/failure-summary.js
+deleted file mode 100644
+index 2938d44..0000000
+--- a/test/core/reporters/helpers/failure-summary.js
++++ /dev/null
+@@ -1,131 +0,0 @@
+-describe('helpers.failureSummary', function () {
+-  'use strict';
+-  beforeEach(function () {
+-    axe._load({
+-      messages: {},
+-      rules: [],
+-      data: {
+-        failureSummaries: {
+-          none: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix all of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          },
+-          all: {
+-            failureMessage: function anonymous() {
+-              throw new Error('shouldnt be executed');
+-            }
+-          },
+-          any: {
+-            failureMessage: function anonymous(it) {
+-              var out = 'Fix any of the following: \n';
+-              var arr1 = it;
+-              if (arr1) {
+-                var value,
+-                  i1 = -1,
+-                  l1 = arr1.length - 1;
+-                while (i1 < l1) {
+-                  value = arr1[(i1 += 1)];
+-                  out += ' ' + value + '\n';
+-                }
+-              }
+-              return out;
+-            }
+-          }
+-        }
+-      }
+-    });
+-  });
+-
+-  it('should concatenate none and all', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [],
+-      all: [
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      none: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        }
+-      ]
+-    });
+-
+-    assert.equal(summary, 'Fix all of the following: \n 1\n 2\n 3\n');
+-  });
+-
+-  it('should return a list of ANYs if none return true', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        },
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      none: [],
+-      all: []
+-    });
+-
+-    assert.equal(summary, 'Fix any of the following: \n 1\n 2\n 3\n');
+-  });
+-
+-  it('should concatenate anys', function () {
+-    var summary = helpers.failureSummary({
+-      result: 'failed',
+-      any: [
+-        {
+-          id: '1',
+-          message: '1'
+-        },
+-        {
+-          id: '2',
+-          message: '2'
+-        },
+-        {
+-          id: '3',
+-          message: '3'
+-        }
+-      ],
+-      all: [],
+-      none: [
+-        {
+-          id: '4',
+-          message: '4'
+-        }
+-      ]
+-    });
+-
+-    assert.equal(
+-      summary,
+-      'Fix all of the following: \n 4\n\n\nFix any of the following: \n 1\n 2\n 3\n'
+-    );
+-  });
+-});
+-- 
+2.39.2 (Apple Git-143)
+

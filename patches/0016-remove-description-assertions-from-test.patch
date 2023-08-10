@@ -1,0 +1,61 @@
+From 3dcf09b8dc2539269b6280adff87e5a4802c1a43 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:55:24 +0200
+Subject: [PATCH] remove description assertions from test
+
+---
+ test/core/public/configure.js | 4 ----
+ test/core/public/run-rules.js | 8 --------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index f05053b..8d18cbf 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -374,8 +374,6 @@ describe('axe.configure', function () {
+       var audit = axe._audit;
+       var localeData = audit.data;
+ 
+-      assert.equal(localeData.rules.greeting.help, 'hi');
+-      assert.equal(localeData.rules.greeting.description, 'hello');
+       assert.equal(localeData.checks.banana.messages.pass, 'pizza');
+       assert.equal(localeData.checks.banana.messages.fail, 'icecream');
+       assert.deepEqual(localeData.checks.banana.messages.incomplete, {
+@@ -401,8 +399,6 @@ describe('axe.configure', function () {
+       var audit = axe._audit;
+       var localeData = audit.data;
+ 
+-      assert.equal(localeData.rules.greeting.help, 'ABCDEFGHIKLMNOPQRSTVXYZ');
+-      assert.equal(localeData.rules.greeting.description, 'hello');
+       assert.equal(localeData.checks.banana.messages.pass, 'yay');
+       assert.equal(localeData.checks.banana.messages.fail, 'icecream');
+       assert.deepEqual(localeData.checks.banana.messages.incomplete, {
+diff --git a/test/core/public/run-rules.js b/test/core/public/run-rules.js
+index 32dc282..80b80c6 100644
+--- a/test/core/public/run-rules.js
++++ b/test/core/public/run-rules.js
+@@ -671,10 +671,6 @@ describe('runRules', function () {
+       assert.equal(results.incomplete[0].id, 'incomplete-1');
+       assert.equal(results.incomplete[1].id, 'incomplete-2');
+ 
+-      assert.include(
+-        results.incomplete[1].description,
+-        'An error occured while running this rule'
+-      );
+       done();
+     });
+   });
+@@ -720,10 +716,6 @@ describe('runRules', function () {
+           assert.equal(results.incomplete[0].id, 'incomplete-1');
+           assert.equal(results.incomplete[1].id, 'incomplete-2');
+ 
+-          assert.include(
+-            results.incomplete[1].description,
+-            'An error occured while running this rule'
+-          );
+           done();
+         });
+       }
+-- 
+2.39.2 (Apple Git-143)
+

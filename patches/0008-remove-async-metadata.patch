@@ -1,0 +1,28 @@
+From 754c30bd4bb1785fff9227dd545f322c2acd60ee Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:24:35 +0200
+Subject: [PATCH] remove async metadata.
+
+---
+ test/integration/full/async/async.js | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/test/integration/full/async/async.js b/test/integration/full/async/async.js
+index 6992adf..b30d44f 100644
+--- a/test/integration/full/async/async.js
++++ b/test/integration/full/async/async.js
+@@ -27,11 +27,6 @@ describe('async rule test', function () {
+       rules: [
+         {
+           id: 'my-async',
+-          metadata: {
+-            description: '',
+-            help: '',
+-            helpUrl: 'https://example.com/dylang'
+-          },
+           selector: '.async',
+           any: ['my-async'],
+           all: [],
+-- 
+2.39.2 (Apple Git-143)
+

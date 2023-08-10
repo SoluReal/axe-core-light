@@ -1,24 +1,19 @@
-From b25fb8ec181d756a9faf9276a9e45454103e2ff8 Mon Sep 17 00:00:00 2001
+From f698bf2cc80741a5965aba00d0936a469f935334 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Mon, 19 Jun 2023 22:43:45 +0200
-Subject: [PATCH 4/7] remove polyfill for element.matches.
+Date: Thu, 10 Aug 2023 16:15:09 +0200
+Subject: [PATCH] remove polyfill element.matches
 
 ---
- lib/core/utils/element-matches.js  | 34 +--------------
+ lib/core/utils/element-matches.js  | 32 +-------------
  test/core/utils/element-matches.js | 70 ------------------------------
- 2 files changed, 2 insertions(+), 102 deletions(-)
+ 2 files changed, 1 insertion(+), 101 deletions(-)
  delete mode 100644 test/core/utils/element-matches.js
 
 diff --git a/lib/core/utils/element-matches.js b/lib/core/utils/element-matches.js
-index bad802d4..e58ad15c 100644
+index bad802d..409c7ac 100644
 --- a/lib/core/utils/element-matches.js
 +++ b/lib/core/utils/element-matches.js
-@@ -1,42 +1,12 @@
- /**
-- * Polyfill for Element#matches
-+ * Element#matches
-  * @param {HTMLElement} node The element to test
-  * @param {String} selector The selector to test element against
+@@ -5,38 +5,8 @@
   * @return {Boolean}
   */
  const matchesSelector = (() => {
@@ -60,7 +55,7 @@ index bad802d4..e58ad15c 100644
  
 diff --git a/test/core/utils/element-matches.js b/test/core/utils/element-matches.js
 deleted file mode 100644
-index 728f5994..00000000
+index 728f599..0000000
 --- a/test/core/utils/element-matches.js
 +++ /dev/null
 @@ -1,70 +0,0 @@
@@ -135,5 +130,5 @@ index 728f5994..00000000
 -  });
 -});
 -- 
-2.37.1 (Apple Git-137.1)
+2.39.2 (Apple Git-143)
 

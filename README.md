@@ -8,7 +8,7 @@ This repository contains patches and a build script to create a smaller version 
 This project is used by [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker) to decrease both the size of `axe.min.js` as well as the output of axe-core.
 
 Because the Accessibility report is passed via websockets, it makes sense to remove some of the unnecessary data.
-For [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker) no messages and translations are needed because we provide our own.s
+For [ExcellentWebCheck's Accessibility Platform](https://excellentwebcheck.com/website-accessibility-checker) no messages and translations are needed because we provide our own.
 
 ## Patches
 
@@ -23,7 +23,7 @@ The patches make the following adjustments:
 
 |                                 | axe-core | axe-core light |
 | ------------------------------- | -------- | -------------- |
-| File size                       | 458K     | 367K           |
+| File size                       | 507K     | 412K           |
 | Output size (small sample page) | 80.9K    | 46.6K          |
 
 Note, we just stripped functionality and compatibility of axe-core and might not work for you!
@@ -43,6 +43,6 @@ All credits to the contributors of [axe-core](https://github.com/dequelabs/axe-c
 
 ## Used By
 
-This project is used by the following companies:
+This project is used by:
 
 - [ExcellentWebCheck](https://excellentwebcheck.com)

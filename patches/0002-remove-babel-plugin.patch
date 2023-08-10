@@ -1,0 +1,29 @@
+From 52ae9fd7644d181dfc14b835af934aa8d35730b0 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 14:57:26 +0200
+Subject: [PATCH] remove babel plugin.
+
+---
+ .babelrc | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/.babelrc b/.babelrc
+index 73a2076..1320b9a 100644
+--- a/.babelrc
++++ b/.babelrc
+@@ -1,11 +1,3 @@
+ {
+-  "presets": ["@babel/preset-env"],
+-  "plugins": [
+-    [
+-      "@babel/plugin-proposal-object-rest-spread",
+-      {
+-        "loose": true
+-      }
+-    ]
+-  ]
++  "presets": ["@babel/preset-env"]
+ }
+-- 
+2.39.2 (Apple Git-143)
+

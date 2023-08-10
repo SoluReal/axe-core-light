@@ -1,0 +1,61 @@
+From 7bf3b8e7fa7968bcdc2b5f1d4ff82eea0a184f1e Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:40:11 +0200
+Subject: [PATCH] remove more helpUrl stuff from tests
+
+---
+ test/core/public/configure.js | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index 12972a0..f05053b 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -4,7 +4,6 @@ describe('axe.configure', function () {
+   // var Check = axe._thisWillBeDeletedDoNotUse.base.Check;
+   var fixture = document.getElementById('fixture');
+   var axeVersion = axe.version;
+-  var ver = axe.version.substring(0, axe.version.lastIndexOf('.'));
+ 
+   afterEach(function () {
+     fixture.innerHTML = '';
+@@ -95,22 +94,12 @@ describe('axe.configure', function () {
+       branding: {}
+     });
+     assert.lengthOf(axe._audit.rules, 1);
+-    assert.equal(
+-      axe._audit.data.rules.bob.helpUrl,
+-      'https://dequeuniversity.com/rules/axe/' + ver + '/bob?application=axeAPI'
+-    );
+     axe.configure({
+       branding: {
+         application: 'thing',
+         brand: 'thung'
+       }
+     });
+-    assert.equal(
+-      axe._audit.data.rules.bob.helpUrl,
+-      'https://dequeuniversity.com/rules/thung/' +
+-        ver +
+-        '/bob?application=thing'
+-    );
+   });
+ 
+   it('sets branding on newly configured rules', function () {
+@@ -129,13 +118,6 @@ describe('axe.configure', function () {
+         }
+       ]
+     });
+-
+-    assert.equal(
+-      axe._audit.data.rules.bob.helpUrl,
+-      'https://dequeuniversity.com/rules/thung/' +
+-        ver +
+-        '/bob?application=thing'
+-    );
+   });
+ 
+   it('should allow for overwriting of rules', function () {
+-- 
+2.39.2 (Apple Git-143)
+

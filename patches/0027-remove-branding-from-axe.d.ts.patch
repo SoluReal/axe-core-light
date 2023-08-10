@@ -1,0 +1,54 @@
+From 13b4672ed6ea7a27f485c35fa51f69bd0dbc5138 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:24:18 +0200
+Subject: [PATCH] remove branding from axe.d.ts
+
+---
+ axe.d.ts                           | 8 --------
+ typings/axe-core/axe-core-tests.ts | 4 ----
+ 2 files changed, 12 deletions(-)
+
+diff --git a/axe.d.ts b/axe.d.ts
+index f0ff2ae..323cfc4 100644
+--- a/axe.d.ts
++++ b/axe.d.ts
+@@ -219,7 +219,6 @@ declare namespace axe {
+     cssColors?: { [key: string]: number[] };
+   }
+   interface Spec {
+-    branding?: string | Branding;
+     reporter?: ReporterVersion | string | AxeReporter;
+     checks?: Check[];
+     rules?: Rule[];
+@@ -232,13 +231,6 @@ declare namespace axe {
+     // Deprecated - do not use.
+     ver?: string;
+   }
+-  /**
+-   * @deprecated Use branding: string instead to set the application key in help URLs
+-   */
+-  interface Branding {
+-    brand?: string;
+-    application?: string;
+-  }
+   interface Check {
+     id: string;
+     evaluate?: Function | string;
+diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
+index be1f954..23ddd45 100644
+--- a/typings/axe-core/axe-core-tests.ts
++++ b/typings/axe-core/axe-core-tests.ts
+@@ -212,10 +212,6 @@ axe.run(context, options, (error: Error, results: axe.AxeResults) => {
+ 
+ // axe.configure
+ var spec: axe.Spec = {
+-  branding: {
+-    brand: 'foo',
+-    application: 'bar'
+-  },
+   reporter: 'v1',
+   checks: [
+     {
+-- 
+2.39.2 (Apple Git-143)
+

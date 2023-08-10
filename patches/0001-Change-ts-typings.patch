@@ -1,0 +1,82 @@
+From ff674a112c229157875b98e3841637856a812b56 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 14:54:57 +0200
+Subject: [PATCH] Change ts typings.
+
+---
+ axe.d.ts                           | 23 -----------------------
+ typings/axe-core/axe-core-tests.ts |  3 ---
+ 2 files changed, 26 deletions(-)
+
+diff --git a/axe.d.ts b/axe.d.ts
+index c174b24..41b282d 100644
+--- a/axe.d.ts
++++ b/axe.d.ts
+@@ -106,20 +106,6 @@ declare namespace axe {
+ 
+   type RunCallback<T = AxeResults> = (error: Error, results: T) => void;
+ 
+-  interface TestEngine {
+-    name: string;
+-    version: string;
+-  }
+-  interface TestRunner {
+-    name: string;
+-  }
+-  interface TestEnvironment {
+-    userAgent: string;
+-    windowWidth: number;
+-    windowHeight: number;
+-    orientationAngle?: number;
+-    orientationType?: string;
+-  }
+   interface RunOnly {
+     type: RunOnlyType;
+     values: TagValue[] | string[];
+@@ -153,9 +139,6 @@ declare namespace axe {
+     inapplicable: Result[];
+   }
+   interface Result {
+-    description: string;
+-    help: string;
+-    helpUrl: string;
+     id: string;
+     impact?: ImpactValue;
+     tags: TagValue[];
+@@ -295,9 +278,6 @@ declare namespace axe {
+   }
+   interface RuleMetadata {
+     ruleId: string;
+-    description: string;
+-    help: string;
+-    helpUrl: string;
+     tags: string[];
+     actIds?: string[];
+   }
+@@ -370,9 +350,6 @@ declare namespace axe {
+   }
+ 
+   interface EnvironmentData {
+-    testEngine: TestEngine;
+-    testRunner: TestRunner;
+-    testEnvironment: TestEnvironment;
+     url: string;
+     timestamp: string;
+   }
+diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
+index 309dc9e..1475d75 100644
+--- a/typings/axe-core/axe-core-tests.ts
++++ b/typings/axe-core/axe-core-tests.ts
+@@ -265,9 +265,6 @@ var spec: axe.Spec = {
+       id: 'custom-rule',
+       any: ['custom-check'],
+       metadata: {
+-        description: 'custom rule',
+-        help: 'different help',
+-        helpUrl: 'https://example.com',
+         tags: ['custom']
+       }
+     }
+-- 
+2.39.2 (Apple Git-143)
+

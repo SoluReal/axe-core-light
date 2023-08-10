@@ -1,0 +1,51 @@
+From 90a42d22726498a615dd339979d4639ad8507dc8 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:05:50 +0200
+Subject: [PATCH] remove test for test environment.
+
+---
+ test/core/utils/get-environment-data.js | 28 -------------------------
+ 1 file changed, 28 deletions(-)
+
+diff --git a/test/core/utils/get-environment-data.js b/test/core/utils/get-environment-data.js
+index 6669e9b..7e5d09d 100644
+--- a/test/core/utils/get-environment-data.js
++++ b/test/core/utils/get-environment-data.js
+@@ -22,34 +22,6 @@ describe('utils.getEnvironmentData', function () {
+     assert.equal(input, output);
+   });
+ 
+-  it('should return a `testEngine` property', function () {
+-    var data = getEnvironmentData();
+-    assert.isObject(data.testEngine);
+-    assert.equal(data.testEngine.name, 'axe-core');
+-    assert.equal(data.testEngine.version, axe.version);
+-  });
+-
+-  it('should return a `testRunner` property', function () {
+-    var data = getEnvironmentData();
+-    assert.isObject(data.testRunner);
+-    assert.equal(data.testRunner.name, axe._audit.brand);
+-  });
+-
+-  it('should return a `testEnvironment` property', function () {
+-    var data = getEnvironmentData();
+-    assert.isObject(data.testEnvironment);
+-    assert.ok(data.testEnvironment.userAgent);
+-    assert.ok(data.testEnvironment.windowWidth);
+-    assert.ok(data.testEnvironment.windowHeight);
+-    assert.isNotNull(data.testEnvironment.orientationAngle);
+-    assert.isNotNull(data.testEnvironment.orientationType);
+-  });
+-
+-  it('should return a `timestamp` property`', function () {
+-    var data = getEnvironmentData();
+-    assert.isDefined(data.timestamp);
+-  });
+-
+   it('should return a `url` property', function () {
+     var data = getEnvironmentData();
+     assert.isDefined(data.url);
+-- 
+2.39.2 (Apple Git-143)
+

@@ -1,0 +1,52 @@
+From 4791dd4b43a4b1dab238fee1c76f5c2a7dbe3b66 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:17:45 +0200
+Subject: [PATCH] remove branding tests
+
+---
+ test/core/base/audit.js | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
+
+diff --git a/test/core/base/audit.js b/test/core/base/audit.js
+index 59c9048..01a4014 100644
+--- a/test/core/base/audit.js
++++ b/test/core/base/audit.js
+@@ -173,35 +173,6 @@ describe('Audit', function () {
+       audit.resetRulesAndChecks();
+       assert.equal(audit.lang, 'en');
+     });
+-    it('should reset brand', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.brand, 'axe');
+-      audit.setBranding({
+-        brand: 'test'
+-      });
+-      assert.equal(audit.brand, 'test');
+-      audit.resetRulesAndChecks();
+-      assert.equal(audit.brand, 'axe');
+-    });
+-    it('should reset brand application', function () {
+-      var audit = new Audit();
+-      assert.equal(audit.application, 'axeAPI');
+-      audit.setBranding({
+-        application: 'test'
+-      });
+-      assert.equal(audit.application, 'test');
+-      audit.resetRulesAndChecks();
+-      assert.equal(audit.application, 'axeAPI');
+-    });
+-    it('should reset brand tagExlcude', function () {
+-      axe._load({});
+-      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
+-      axe.configure({
+-        tagExclude: ['ninjas']
+-      });
+-      axe._audit.resetRulesAndChecks();
+-      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
+-    });
+ 
+     it('should reset noHtml', function () {
+       var audit = new Audit();
+-- 
+2.39.2 (Apple Git-143)
+

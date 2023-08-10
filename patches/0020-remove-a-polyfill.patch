@@ -1,14 +1,14 @@
-From b1eeadf2bbba27812660b8c94bd42eacc44b7a5b Mon Sep 17 00:00:00 2001
+From 7d5d5229945ae270b06baf11c5990bbe2e5f4f65 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Mon, 19 Jun 2023 22:40:43 +0200
-Subject: [PATCH 3/7] remove one more polyfill
+Date: Thu, 10 Aug 2023 16:12:49 +0200
+Subject: [PATCH] remove a polyfill
 
 ---
  lib/core/utils/selector-cache.js | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/lib/core/utils/selector-cache.js b/lib/core/utils/selector-cache.js
-index 5f817006..d5e5a03b 100644
+index 5f81700..d5e5a03 100644
 --- a/lib/core/utils/selector-cache.js
 +++ b/lib/core/utils/selector-cache.js
 @@ -56,10 +56,7 @@ export function getNodesMatchingExpression(domTree, expressions, filter) {
@@ -24,5 +24,5 @@ index 5f817006..d5e5a03b 100644
    if (filter) {
      matchedNodes = matchedNodes.filter(filter);
 -- 
-2.37.1 (Apple Git-137.1)
+2.39.2 (Apple Git-143)
 

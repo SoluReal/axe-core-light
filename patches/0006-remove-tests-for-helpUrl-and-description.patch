@@ -1,0 +1,310 @@
+From 4409832e44eb4bf15eaf0141ed44a6b436175fb5 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:22:42 +0200
+Subject: [PATCH] remove tests for helpUrl and description.
+
+---
+ test/core/reporters/na.js        | 17 -----------------
+ test/core/reporters/no-passes.js | 13 -------------
+ test/core/reporters/raw-env.js   |  5 -----
+ test/core/reporters/raw.js       |  5 -----
+ test/core/reporters/v1.js        | 25 -------------------------
+ test/core/reporters/v2.js        | 15 ---------------
+ 6 files changed, 80 deletions(-)
+
+diff --git a/test/core/reporters/na.js b/test/core/reporters/na.js
+index 672c165..a6b2d5c 100644
+--- a/test/core/reporters/na.js
++++ b/test/core/reporters/na.js
+@@ -4,8 +4,6 @@ describe('reporters - na', function () {
+     _results = [
+       {
+         id: 'noMatch',
+-        helpUrl: 'somewhere',
+-        description: 'stuff',
+         result: 'inapplicable',
+         impact: null,
+         tags: ['tag3'],
+@@ -14,8 +12,6 @@ describe('reporters - na', function () {
+       },
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         result: 'passed',
+         impact: null,
+         tags: ['tag1'],
+@@ -134,13 +130,6 @@ describe('reporters - na', function () {
+       assert.deepEqual(results.inapplicable[0].tags, ['tag3']);
+     });
+   });
+-  it('should add the rule help to the rule result', function () {
+-    axe.getReporter('na')(runResults, {}, function (results) {
+-      assert.ok(!results.violations[0].helpUrl);
+-      assert.equal(results.passes[0].helpUrl, 'things');
+-      assert.equal(results.inapplicable[0].helpUrl, 'somewhere');
+-    });
+-  });
+   it('should add the html to the node data', function () {
+     axe.getReporter('na')(runResults, {}, function (results) {
+       assert.ok(results.violations[0].nodes);
+@@ -163,12 +152,6 @@ describe('reporters - na', function () {
+       ]);
+     });
+   });
+-  it('should add the description to the rule result', function () {
+-    axe.getReporter('na')(runResults, {}, function (results) {
+-      assert.equal(results.violations[0].description, 'something more nifty');
+-      assert.equal(results.passes[0].description, 'something nifty');
+-    });
+-  });
+   it('should add the impact to the rule result', function () {
+     axe.getReporter('na')(runResults, {}, function (results) {
+       assert.equal(results.violations[0].impact, 'cats');
+diff --git a/test/core/reporters/no-passes.js b/test/core/reporters/no-passes.js
+index f99ee34..8a13504 100644
+--- a/test/core/reporters/no-passes.js
++++ b/test/core/reporters/no-passes.js
+@@ -4,8 +4,6 @@ describe('reporters - no-passes', function () {
+     _results = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         tags: ['tag1'],
+         result: 'passed',
+         impact: null,
+@@ -38,7 +36,6 @@ describe('reporters - no-passes', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -116,11 +113,6 @@ describe('reporters - no-passes', function () {
+       assert.deepEqual(results.violations[0].tags, ['tag2']);
+     });
+   });
+-  it('should add the rule help to the rule result', function () {
+-    axe.getReporter('no-passes')(runResults, {}, function (results) {
+-      assert.isNotOk(results.violations[0].helpUrl);
+-    });
+-  });
+   it('should add the html to the node data', function () {
+     axe.getReporter('no-passes')(runResults, {}, function (results) {
+       assert.ok(results.violations[0].nodes);
+@@ -142,11 +134,6 @@ describe('reporters - no-passes', function () {
+       ]);
+     });
+   });
+-  it('should add the description to the rule result', function () {
+-    axe.getReporter('no-passes')(runResults, {}, function (results) {
+-      assert.equal(results.violations[0].description, 'something more nifty');
+-    });
+-  });
+   it('should add the impact to the rule result', function () {
+     axe.getReporter('no-passes')(runResults, {}, function (results) {
+       assert.equal(results.violations[0].impact, 'cats');
+diff --git a/test/core/reporters/raw-env.js b/test/core/reporters/raw-env.js
+index e10635e..d8d9108 100644
+--- a/test/core/reporters/raw-env.js
++++ b/test/core/reporters/raw-env.js
+@@ -15,8 +15,6 @@ describe('reporters - raw-env', function () {
+     runResults = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         tags: ['tag1'],
+         result: 'passed',
+         violations: [],
+@@ -37,7 +35,6 @@ describe('reporters - raw-env', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -62,7 +59,6 @@ describe('reporters - raw-env', function () {
+       },
+       {
+         id: 'bypass',
+-        description: 'something even more nifty',
+         tags: ['tag3'],
+         impact: 'monkeys',
+         result: 'failed',
+@@ -86,7 +82,6 @@ describe('reporters - raw-env', function () {
+       },
+       {
+         id: 'blinky',
+-        description: 'something awesome',
+         tags: ['tag4'],
+         violations: [],
+         result: 'passed',
+diff --git a/test/core/reporters/raw.js b/test/core/reporters/raw.js
+index 6164875..3e4d472 100644
+--- a/test/core/reporters/raw.js
++++ b/test/core/reporters/raw.js
+@@ -15,8 +15,6 @@ describe('reporters - raw', function () {
+     runResults = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         tags: ['tag1'],
+         result: 'passed',
+         violations: [],
+@@ -37,7 +35,6 @@ describe('reporters - raw', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -62,7 +59,6 @@ describe('reporters - raw', function () {
+       },
+       {
+         id: 'bypass',
+-        description: 'something even more nifty',
+         tags: ['tag3'],
+         impact: 'monkeys',
+         result: 'failed',
+@@ -86,7 +82,6 @@ describe('reporters - raw', function () {
+       },
+       {
+         id: 'blinky',
+-        description: 'something awesome',
+         tags: ['tag4'],
+         violations: [],
+         result: 'passed',
+diff --git a/test/core/reporters/v1.js b/test/core/reporters/v1.js
+index aaca851..ccded89 100644
+--- a/test/core/reporters/v1.js
++++ b/test/core/reporters/v1.js
+@@ -4,8 +4,6 @@ describe('reporters - v1', function () {
+     _results = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         tags: ['tag1'],
+         result: 'passed',
+         violations: [],
+@@ -30,7 +28,6 @@ describe('reporters - v1', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -58,7 +55,6 @@ describe('reporters - v1', function () {
+       },
+       {
+         id: 'bypass',
+-        description: 'something even more nifty',
+         tags: ['tag3'],
+         impact: 'monkeys',
+         result: 'failed',
+@@ -85,7 +81,6 @@ describe('reporters - v1', function () {
+       },
+       {
+         id: 'incomplete',
+-        description: 'something yet more nifty',
+         tags: ['tag4'],
+         impact: 'monkeys',
+         result: 'failed',
+@@ -113,7 +108,6 @@ describe('reporters - v1', function () {
+       },
+       {
+         id: 'blinky',
+-        description: 'something awesome',
+         tags: ['tag4'],
+         violations: [],
+         result: 'passed',
+@@ -212,14 +206,6 @@ describe('reporters - v1', function () {
+       assert.deepEqual(results.passes[1].tags, ['tag4']);
+     });
+   });
+-  it('should add the rule help to the rule result', function () {
+-    axe.getReporter('v1')(runResults, {}, function (results) {
+-      assert.isNotOk(results.violations[0].helpUrl);
+-      assert.isNotOk(results.violations[1].helpUrl);
+-      assert.equal(results.passes[0].helpUrl, 'things');
+-      assert.isNotOk(results.passes[1].helpUrl);
+-    });
+-  });
+   it('should add the html to the node data', function () {
+     axe.getReporter('v1')(runResults, {}, function (results) {
+       assert.ok(results.violations[0].nodes);
+@@ -264,17 +250,6 @@ describe('reporters - v1', function () {
+       ]);
+     });
+   });
+-  it('should add the description to the rule result', function () {
+-    axe.getReporter('v1')(runResults, {}, function (results) {
+-      assert.equal(results.violations[0].description, 'something more nifty');
+-      assert.equal(
+-        results.violations[1].description,
+-        'something even more nifty'
+-      );
+-      assert.equal(results.passes[0].description, 'something nifty');
+-      assert.equal(results.passes[1].description, 'something awesome');
+-    });
+-  });
+   it('should add the impact to the rule result', function () {
+     axe.getReporter('v1')(runResults, {}, function (results) {
+       assert.equal(results.violations[0].impact, 'cats');
+diff --git a/test/core/reporters/v2.js b/test/core/reporters/v2.js
+index fbb10b0..f84015f 100644
+--- a/test/core/reporters/v2.js
++++ b/test/core/reporters/v2.js
+@@ -4,8 +4,6 @@ describe('reporters - v2', function () {
+     _results = [
+       {
+         id: 'gimmeLabel',
+-        helpUrl: 'things',
+-        description: 'something nifty',
+         result: 'passed',
+         impact: null,
+         tags: ['tag1'],
+@@ -38,7 +36,6 @@ describe('reporters - v2', function () {
+       },
+       {
+         id: 'idkStuff',
+-        description: 'something more nifty',
+         pageLevel: true,
+         result: 'failed',
+         impact: 'cats',
+@@ -119,12 +116,6 @@ describe('reporters - v2', function () {
+       assert.deepEqual(results.passes[0].tags, ['tag1']);
+     });
+   });
+-  it('should add the rule help to the rule result', function () {
+-    axe.getReporter('v2')(runResults, {}, function (results) {
+-      assert.isNotOk(results.violations[0].helpUrl);
+-      assert.equal(results.passes[0].helpUrl, 'things');
+-    });
+-  });
+   it('should add the html to the node data', function () {
+     axe.getReporter('v2')(runResults, {}, function (results) {
+       assert.ok(results.violations[0].nodes);
+@@ -147,12 +138,6 @@ describe('reporters - v2', function () {
+       ]);
+     });
+   });
+-  it('should add the description to the rule result', function () {
+-    axe.getReporter('v2')(runResults, {}, function (results) {
+-      assert.equal(results.violations[0].description, 'something more nifty');
+-      assert.equal(results.passes[0].description, 'something nifty');
+-    });
+-  });
+   it('should add the impact to the rule result', function () {
+     axe.getReporter('v2')(runResults, {}, function (results) {
+       assert.equal(results.violations[0].impact, 'cats');
+-- 
+2.39.2 (Apple Git-143)
+

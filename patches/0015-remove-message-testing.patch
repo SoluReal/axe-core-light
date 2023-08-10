@@ -1,0 +1,98 @@
+From 23fbefeb258ff473b6cc470085c49347a19a3572 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:52:12 +0200
+Subject: [PATCH] remove message testing
+
+---
+ test/testutils.js | 75 +----------------------------------------------
+ 1 file changed, 1 insertion(+), 74 deletions(-)
+
+diff --git a/test/testutils.js b/test/testutils.js
+index 843441b..e0fa662 100644
+--- a/test/testutils.js
++++ b/test/testutils.js
+@@ -481,80 +481,7 @@ testUtils.getCheckEvaluate = function getCheckEvaluate(checkId, testOptions) {
+   var evaluateWrapper = function (node, options, virtualNode, context) {
+     var opts = check.getOptions(options);
+ 
+-    var result = check.evaluate.call(this, node, opts, virtualNode, context);
+-
+-    // ensure that every result has a corresponding message
+-    if (testOptions.verifyMessage !== false) {
+-      var messages = axe._audit.data.checks[checkId].messages;
+-      var messageKey = this._data && this._data.messageKey;
+-
+-      // see how the check is used to know where to find the message
+-      // e.g. a check used only in the `none` array of a rule will look at
+-      // the messageKey of a passing result in the `fail` messages
+-      var keyResult = result;
+-      var isNoneCheck = noneChecks.indexOf(checkId) !== -1;
+-      if (isNoneCheck) {
+-        keyResult = result === true ? false : result === false ? true : result;
+-      }
+-
+-      var key =
+-        keyResult === true
+-          ? 'pass'
+-          : keyResult === false
+-          ? 'fail'
+-          : 'incomplete';
+-      var noneCheckMessage = isNoneCheck
+-        ? '. Note that since this check is only used in the "none" array of all rules, the messages use the inverse of the result (e.g. a result of false uses the "pass" messages)'
+-        : '';
+-
+-      assert.exists(
+-        messages[key],
+-        'Missing "' +
+-          key +
+-          '" message for check result of ' +
+-          result +
+-          noneCheckMessage
+-      );
+-      if (messageKey) {
+-        assert.exists(
+-          messages[key][messageKey],
+-          'Missing ' +
+-            key +
+-            ' message key "' +
+-            messageKey +
+-            '" for check result of ' +
+-            result +
+-            noneCheckMessage
+-        );
+-
+-        var message = axe.utils.processMessage(
+-          messages[key][messageKey],
+-          this._data
+-        );
+-        assert.isTrue(
+-          message.indexOf('${') === -1,
+-          'Data object missing properties for ' +
+-            key +
+-            ' message key "' +
+-            messageKey +
+-            '": "' +
+-            message +
+-            '"'
+-        );
+-      } else {
+-        var message = axe.utils.processMessage(messages[key], this._data);
+-        assert.isTrue(
+-          message.indexOf('${') === -1,
+-          'Data object missing properties for ' +
+-            key +
+-            ' message: "' +
+-            message +
+-            '"'
+-        );
+-      }
+-    }
+-
+-    return result;
++    return check.evaluate.call(this, node, opts, virtualNode, context);
+   };
+   return evaluateWrapper;
+ };
+-- 
+2.39.2 (Apple Git-143)
+

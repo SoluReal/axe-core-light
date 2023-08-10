@@ -1,0 +1,50 @@
+From 9b93fd370ef525eb381b1bf8d9a77ba4ff40e415 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:40:14 +0200
+Subject: [PATCH] strip metadata
+
+---
+ build/build-manual.js | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/build/build-manual.js b/build/build-manual.js
+index d86ee1d..14fb498 100644
+--- a/build/build-manual.js
++++ b/build/build-manual.js
+@@ -13,6 +13,33 @@ module.exports = function build(grunt, options, commons, callback) {
+     var files = grunt.file.expand(src);
+     return files.map(function (file) {
+       var json = grunt.file.readJSON(file);
++      json = Object.fromEntries(
++        Object.entries(json).flatMap(([key, value]) => {
++          if (key === 'metadata') {
++            var metadata = {};
++            if (value.hasOwnProperty('impact')) {
++              metadata = { ...metadata, impact: value.impact };
++            }
++            if (value.hasOwnProperty('messages')) {
++              if ('pass' in value.messages) {
++                value.messages.pass = '';
++              }
++              if ('incomplete' in value.messages) {
++                value.messages.incomplete = '';
++              }
++              if ('fail' in value.messages) {
++                value.messages.fail = '';
++              }
++              metadata = { ...metadata, messages: value.messages };
++            }
++            return [[key, metadata]];
++          } else if (key === 'incompleteFallbackMessage') {
++            return [];
++          } else {
++            return [[key, value]];
++          }
++        })
++      );
+       var dirname = path.dirname(file);
+       Object.keys(templates).forEach(function (templateName) {
+         if (json[templateName] && json[templateName].endsWith('.js')) {
+-- 
+2.39.2 (Apple Git-143)
+

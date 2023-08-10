@@ -1,0 +1,95 @@
+From a335dfe0e2b56f15c8b4fae4faf56d63404bba21 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 16:30:53 +0200
+Subject: [PATCH] remove failureSummary.
+
+---
+ lib/core/base/audit.js        | 19 -------------------
+ test/core/public/configure.js | 34 ----------------------------------
+ 2 files changed, 53 deletions(-)
+
+diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
+index 4656be5..cc388be 100644
+--- a/lib/core/base/audit.js
++++ b/lib/core/base/audit.js
+@@ -266,22 +266,6 @@ class Audit {
+       this.data.rules[id] = mergeRuleLocale(this.data.rules[id], rules[id]);
+     }
+   }
+-  /**
+-   * Apply locale for the given failureMessage
+-   */
+-  _applyFailureSummaries(messages) {
+-    const keys = Object.keys(messages);
+-    for (let i = 0; i < keys.length; i++) {
+-      const key = keys[i];
+-      if (!this.data.failureSummaries[key]) {
+-        throw new Error(`Locale provided for unknown failureMessage: "${key}"`);
+-      }
+-      this.data.failureSummaries[key] = mergeFailureMessage(
+-        this.data.failureSummaries[key],
+-        messages[key]
+-      );
+-    }
+-  }
+   /**
+    * Apply the given `locale`.
+    *
+@@ -295,9 +279,6 @@ class Audit {
+     if (locale.rules) {
+       this._applyRuleLocale(locale.rules);
+     }
+-    if (locale.failureSummaries) {
+-      this._applyFailureSummaries(locale.failureSummaries, 'failureSummaries');
+-    }
+     if (locale.incompleteFallbackMessage) {
+       this.data.incompleteFallbackMessage = mergeFallbackMessage(
+         this.data.incompleteFallbackMessage,
+diff --git a/test/core/public/configure.js b/test/core/public/configure.js
+index f5eab7c..76052d4 100644
+--- a/test/core/public/configure.js
++++ b/test/core/public/configure.js
+@@ -426,40 +426,6 @@ describe('axe.configure', function () {
+       assert.isTrue(typeof localeData.checks.banana.messages.fail === 'string');
+     });
+ 
+-    it('should not strip newline characters from doT template', function () {
+-      axe._load({
+-        data: {
+-          failureSummaries: {
+-            any: {
+-              failureMessage: function () {
+-                return 'failed any';
+-              }
+-            }
+-          }
+-        }
+-      });
+-
+-      axe.configure({
+-        locale: {
+-          lang: 'lol',
+-          failureSummaries: {
+-            any: {
+-              failureMessage:
+-                "Fix any of the following:{{~it:value}}\n  {{=value.split('\\n').join('\\n  ')}}{{~}}"
+-            }
+-          }
+-        }
+-      });
+-
+-      var audit = axe._audit;
+-      var localeData = audit.data;
+-
+-      assert.equal(
+-        localeData.failureSummaries.any.failureMessage(['1', '2', '3']),
+-        'Fix any of the following:\n  1\n  2\n  3'
+-      );
+-    });
+-
+     describe('only given checks', function () {
+       it('should not error', function () {
+         assert.doesNotThrow(function () {
+-- 
+2.39.2 (Apple Git-143)
+

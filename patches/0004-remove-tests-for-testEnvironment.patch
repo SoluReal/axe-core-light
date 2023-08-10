@@ -1,0 +1,139 @@
+From bdf2f6941755910891b619e5a4f7f488c6d4a160 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 10 Aug 2023 15:14:51 +0200
+Subject: [PATCH] remove tests for testEnvironment.
+
+---
+ test/core/public/run-virtual-rule.js | 2 --
+ test/core/reporters/na.js            | 6 ------
+ test/core/reporters/no-passes.js     | 6 ------
+ test/core/reporters/raw-env.js       | 3 ---
+ test/core/reporters/v1.js            | 6 ------
+ test/core/reporters/v2.js            | 6 ------
+ 6 files changed, 29 deletions(-)
+
+diff --git a/test/core/public/run-virtual-rule.js b/test/core/public/run-virtual-rule.js
+index 8ceda37..d5ea428 100644
+--- a/test/core/public/run-virtual-rule.js
++++ b/test/core/public/run-virtual-rule.js
+@@ -188,7 +188,5 @@ describe('axe.runVirtualRule', function () {
+     assert.isDefined(results.passes);
+     assert.isDefined(results.incomplete);
+     assert.isDefined(results.inapplicable);
+-    assert.isDefined(results.testEngine);
+-    assert.isDefined(results.toolOptions);
+   });
+ });
+diff --git a/test/core/reporters/na.js b/test/core/reporters/na.js
+index a9c6777..672c165 100644
+--- a/test/core/reporters/na.js
++++ b/test/core/reporters/na.js
+@@ -205,9 +205,6 @@ describe('reporters - na', function () {
+   it('should add environment data', function () {
+     axe.getReporter('na')(runResults, {}, function (results) {
+       assert.isDefined(results.url);
+-      assert.isDefined(results.timestamp);
+-      assert.isDefined(results.testEnvironment);
+-      assert.isDefined(results.testRunner);
+     });
+   });
+   it('should add toolOptions property', function () {
+@@ -225,9 +222,6 @@ describe('reporters - na', function () {
+       function (results) {
+         assert.equal(results.myReporter, 'hello world');
+         assert.isUndefined(results.url);
+-        assert.isUndefined(results.timestamp);
+-        assert.isUndefined(results.testEnvironment);
+-        assert.isUndefined(results.testRunner);
+       }
+     );
+   });
+diff --git a/test/core/reporters/no-passes.js b/test/core/reporters/no-passes.js
+index 5947617..f99ee34 100644
+--- a/test/core/reporters/no-passes.js
++++ b/test/core/reporters/no-passes.js
+@@ -169,9 +169,6 @@ describe('reporters - no-passes', function () {
+   it('should add environment data', function () {
+     axe.getReporter('no-passes')(runResults, {}, function (results) {
+       assert.isDefined(results.url);
+-      assert.isDefined(results.timestamp);
+-      assert.isDefined(results.testEnvironment);
+-      assert.isDefined(results.testRunner);
+     });
+   });
+   it('should add toolOptions property', function () {
+@@ -189,9 +186,6 @@ describe('reporters - no-passes', function () {
+       function (results) {
+         assert.equal(results.myReporter, 'hello world');
+         assert.isUndefined(results.url);
+-        assert.isUndefined(results.timestamp);
+-        assert.isUndefined(results.testEnvironment);
+-        assert.isUndefined(results.testRunner);
+       }
+     );
+   });
+diff --git a/test/core/reporters/raw-env.js b/test/core/reporters/raw-env.js
+index 8455045..e10635e 100644
+--- a/test/core/reporters/raw-env.js
++++ b/test/core/reporters/raw-env.js
+@@ -131,9 +131,6 @@ describe('reporters - raw-env', function () {
+     axe.getReporter('rawEnv')(runResults, {}, function (results) {
+       assert.isDefined(results.env);
+       assert.isDefined(results.env.url);
+-      assert.isDefined(results.env.timestamp);
+-      assert.isDefined(results.env.testEnvironment);
+-      assert.isDefined(results.env.testRunner);
+     });
+   });
+ 
+diff --git a/test/core/reporters/v1.js b/test/core/reporters/v1.js
+index 8ebc2c5..aaca851 100644
+--- a/test/core/reporters/v1.js
++++ b/test/core/reporters/v1.js
+@@ -286,9 +286,6 @@ describe('reporters - v1', function () {
+   it('should add environment data', function () {
+     axe.getReporter('v1')(runResults, {}, function (results) {
+       assert.isDefined(results.url);
+-      assert.isDefined(results.timestamp);
+-      assert.isDefined(results.testEnvironment);
+-      assert.isDefined(results.testRunner);
+     });
+   });
+   it('should add toolOptions property', function () {
+@@ -306,9 +303,6 @@ describe('reporters - v1', function () {
+       function (results) {
+         assert.equal(results.myReporter, 'hello world');
+         assert.isUndefined(results.url);
+-        assert.isUndefined(results.timestamp);
+-        assert.isUndefined(results.testEnvironment);
+-        assert.isUndefined(results.testRunner);
+       }
+     );
+   });
+diff --git a/test/core/reporters/v2.js b/test/core/reporters/v2.js
+index 29d13b6..fbb10b0 100644
+--- a/test/core/reporters/v2.js
++++ b/test/core/reporters/v2.js
+@@ -187,9 +187,6 @@ describe('reporters - v2', function () {
+   it('should add environment data', function () {
+     axe.getReporter('v2')(runResults, {}, function (results) {
+       assert.isDefined(results.url);
+-      assert.isDefined(results.timestamp);
+-      assert.isDefined(results.testEnvironment);
+-      assert.isDefined(results.testRunner);
+     });
+   });
+   it('should add toolOptions property', function () {
+@@ -207,9 +204,6 @@ describe('reporters - v2', function () {
+       function (results) {
+         assert.equal(results.myReporter, 'hello world');
+         assert.isUndefined(results.url);
+-        assert.isUndefined(results.timestamp);
+-        assert.isUndefined(results.testEnvironment);
+-        assert.isUndefined(results.testRunner);
+       }
+     );
+   });
+-- 
+2.39.2 (Apple Git-143)
+
