@@ -1,15 +1,14 @@
-From a03ac716a45253ee6ab0189ee95aaaa1666812c2 Mon Sep 17 00:00:00 2001
+From 7774757e428e672c6579992a5fa48d4e0f8e2104 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 15:41:40 +0200
-Subject: [PATCH] remove helpUrl from source
+Date: Fri, 11 Aug 2023 12:03:21 +0200
+Subject: [PATCH] remove helpurl
 
 ---
  lib/core/base/audit.js        | 36 -----------------------------------
  lib/core/constants.js         |  1 -
  lib/core/public/configure.js  |  2 --
- lib/core/public/get-rules.js  |  1 -
  test/core/public/run-rules.js | 17 -----------------
- 5 files changed, 57 deletions(-)
+ 4 files changed, 56 deletions(-)
 
 diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
 index b8aee7d..4656be5 100644
@@ -95,18 +94,6 @@ index cbd6424..3bd53f7 100644
    }
  
    if (spec.tagExclude) {
-diff --git a/lib/core/public/get-rules.js b/lib/core/public/get-rules.js
-index d52216f..e4ede8f 100644
---- a/lib/core/public/get-rules.js
-+++ b/lib/core/public/get-rules.js
-@@ -20,7 +20,6 @@ function getRules(tags) {
-       ruleId: matchingRule.id,
-       description: rd.description,
-       help: rd.help,
--      helpUrl: rd.helpUrl,
-       tags: matchingRule.tags,
-       actIds: matchingRule.actIds
-     };
 diff --git a/test/core/public/run-rules.js b/test/core/public/run-rules.js
 index 778b236..32dc282 100644
 --- a/test/core/public/run-rules.js

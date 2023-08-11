@@ -1,14 +1,14 @@
-From 6e1c767da784559523a746c1a7b92b48f2744310 Mon Sep 17 00:00:00 2001
+From f6ed7c94c53a9496b30287538936100aaea0b4b7 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 15:30:32 +0200
-Subject: [PATCH] remove helpUrl from axe.getRules test.
+Date: Fri, 11 Aug 2023 12:15:17 +0200
+Subject: [PATCH] remove helpUrl from axe.getRules.test
 
 ---
- test/core/public/get-rules.js | 62 +++--------------------------------
- 1 file changed, 5 insertions(+), 57 deletions(-)
+ test/core/public/get-rules.js | 66 +++--------------------------------
+ 1 file changed, 5 insertions(+), 61 deletions(-)
 
 diff --git a/test/core/public/get-rules.js b/test/core/public/get-rules.js
-index 540b459..f78d385 100644
+index 540b459..f005988 100644
 --- a/test/core/public/get-rules.js
 +++ b/test/core/public/get-rules.js
 @@ -1,6 +1,5 @@
@@ -18,7 +18,7 @@ index 540b459..f78d385 100644
  
    beforeEach(function () {
      axe._load({
-@@ -44,25 +43,9 @@ describe('axe.getRules', function () {
+@@ -44,42 +43,17 @@ describe('axe.getRules', function () {
      assert.isArray(retValue);
      assert.lengthOf(retValue, 2);
      assert.equal(retValue[0].ruleId, 'awesomeRule1');
@@ -42,9 +42,9 @@ index 540b459..f78d385 100644
 -        '/awesomeRule2?application=axeAPI'
 -    );
      assert.deepEqual(retValue[1].tags, ['tag1', 'tag2']);
-     assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
+-    assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
  
-@@ -70,14 +53,7 @@ describe('axe.getRules', function () {
+     retValue = axe.getRules(['tag2']);
      assert.isArray(retValue);
      assert.lengthOf(retValue, 1);
      assert.equal(retValue[0].ruleId, 'awesomeRule2');
@@ -58,9 +58,11 @@ index 540b459..f78d385 100644
 -    );
 +
      assert.deepEqual(retValue[0].tags, ['tag1', 'tag2']);
-     assert.deepEqual(retValue[0].actIds, ['abc123', 'xyz789']);
+-    assert.deepEqual(retValue[0].actIds, ['abc123', 'xyz789']);
    });
-@@ -91,25 +67,11 @@ describe('axe.getRules', function () {
+ 
+   it('should not return nothing', function () {
+@@ -91,52 +65,22 @@ describe('axe.getRules', function () {
    it('should return all rules if given no tags - undefined', function () {
      var retValue = axe.getRules();
      assert.equal(retValue[0].ruleId, 'awesomeRule1');
@@ -86,9 +88,9 @@ index 540b459..f78d385 100644
 -    );
 +
      assert.deepEqual(retValue[1].tags, ['tag1', 'tag2']);
-     assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
+-    assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
    });
-@@ -117,25 +79,11 @@ describe('axe.getRules', function () {
+ 
    it('should return all rules if given empty array', function () {
      var retValue = axe.getRules([]);
      assert.equal(retValue[0].ruleId, 'awesomeRule1');
@@ -114,8 +116,9 @@ index 540b459..f78d385 100644
 -    );
 +
      assert.deepEqual(retValue[1].tags, ['tag1', 'tag2']);
-     assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
+-    assert.deepEqual(retValue[1].actIds, ['abc123', 'xyz789']);
    });
+ });
 -- 
 2.39.2 (Apple Git-143)
 

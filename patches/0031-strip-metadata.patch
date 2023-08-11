@@ -1,17 +1,17 @@
-From 9b93fd370ef525eb381b1bf8d9a77ba4ff40e415 Mon Sep 17 00:00:00 2001
+From ff85dcb91499ed23d291392198d5487279d50c0a Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 16:40:14 +0200
+Date: Fri, 11 Aug 2023 11:40:52 +0200
 Subject: [PATCH] strip metadata
 
 ---
- build/build-manual.js | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ build/build-manual.js | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/build/build-manual.js b/build/build-manual.js
-index d86ee1d..14fb498 100644
+index d86ee1d..5981969 100644
 --- a/build/build-manual.js
 +++ b/build/build-manual.js
-@@ -13,6 +13,33 @@ module.exports = function build(grunt, options, commons, callback) {
+@@ -13,6 +13,35 @@ module.exports = function build(grunt, options, commons, callback) {
      var files = grunt.file.expand(src);
      return files.map(function (file) {
        var json = grunt.file.readJSON(file);
@@ -35,8 +35,10 @@ index d86ee1d..14fb498 100644
 +              metadata = { ...metadata, messages: value.messages };
 +            }
 +            return [[key, metadata]];
-+          } else if (key === 'incompleteFallbackMessage') {
++          } else if (key === 'incompleteFallbackMessage' || key === 'actIds') {
 +            return [];
++          } else if (key === 'tags') {
++            return [[key, value.filter(tag => tag.startsWith('wcag'))]];
 +          } else {
 +            return [[key, value]];
 +          }
