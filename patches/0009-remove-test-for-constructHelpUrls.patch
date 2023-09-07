@@ -1,6 +1,6 @@
-From acd022e12db02cc5048ba8b5e6fa9de3166036ab Mon Sep 17 00:00:00 2001
+From 74b017eca638b05b4d09027072de4339c0de0abb Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 15:36:19 +0200
+Date: Thu, 7 Sep 2023 09:19:43 +0200
 Subject: [PATCH] remove test for constructHelpUrls
 
 ---
@@ -8,16 +8,16 @@ Subject: [PATCH] remove test for constructHelpUrls
  1 file changed, 158 deletions(-)
 
 diff --git a/test/core/base/audit.js b/test/core/base/audit.js
-index 7a9dfd5..c09ec67 100644
+index 7160c0d..c1733e8 100644
 --- a/test/core/base/audit.js
 +++ b/test/core/base/audit.js
-@@ -108,164 +108,6 @@ describe('Audit', function () {
+@@ -103,164 +103,6 @@ describe('Audit', () => {
      });
    });
  
--  describe('Audit#_constructHelpUrls', function () {
--    it('should create default help URLS', function () {
--      var audit = new Audit();
+-  describe('Audit#_constructHelpUrls', () => {
+-    it('should create default help URLS', () => {
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -33,8 +33,8 @@ index 7a9dfd5..c09ec67 100644
 -          '/target?application=axeAPI'
 -      });
 -    });
--    it('should use changed branding', function () {
--      var audit = new Audit();
+-    it('should use changed branding', () => {
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -51,8 +51,8 @@ index 7a9dfd5..c09ec67 100644
 -          '/target?application=axeAPI'
 -      });
 -    });
--    it('should use changed application', function () {
--      var audit = new Audit();
+-    it('should use changed application', () => {
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -70,8 +70,8 @@ index 7a9dfd5..c09ec67 100644
 -      });
 -    });
 -
--    it('does not override helpUrls of different products', function () {
--      var audit = new Audit();
+-    it('does not override helpUrls of different products', () => {
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target1',
 -        matches: 'function () {return "hello";}',
@@ -114,9 +114,9 @@ index 7a9dfd5..c09ec67 100644
 -          '/target2?application=axeAPI'
 -      );
 -    });
--    it('understands prerelease type version numbers', function () {
--      var tempVersion = axe.version;
--      var audit = new Audit();
+-    it('understands prerelease type version numbers', () => {
+-      const tempVersion = axe.version;
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -133,9 +133,9 @@ index 7a9dfd5..c09ec67 100644
 -      );
 -    });
 -
--    it('matches major release versions', function () {
--      var tempVersion = axe.version;
--      var audit = new Audit();
+-    it('matches major release versions', () => {
+-      const tempVersion = axe.version;
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -151,8 +151,8 @@ index 7a9dfd5..c09ec67 100644
 -        'https://dequeuniversity.com/rules/axe/1.0/target?application=axeAPI'
 -      );
 -    });
--    it('sets the lang query if locale has been set', function () {
--      var audit = new Audit();
+-    it('sets the lang query if locale has been set', () => {
+-      audit = new Audit();
 -      audit.addRule({
 -        id: 'target',
 -        matches: 'function () {return "hello";}',
@@ -173,9 +173,9 @@ index 7a9dfd5..c09ec67 100644
 -    });
 -  });
 -
-   describe('Audit#setBranding', function () {
-     it('should change the brand', function () {
-       var audit = new Audit();
+   describe('Audit#setBranding', () => {
+     it('should change the brand', () => {
+       audit = new Audit();
 -- 
 2.39.2 (Apple Git-143)
 

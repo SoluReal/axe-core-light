@@ -1,15 +1,15 @@
-From ff674a112c229157875b98e3841637856a812b56 Mon Sep 17 00:00:00 2001
+From 7ae007f3a4eaae0d64cd419920519b71356b12e3 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 14:54:57 +0200
-Subject: [PATCH] Change ts typings.
+Date: Thu, 7 Sep 2023 09:16:42 +0200
+Subject: [PATCH] change ts typings.
 
 ---
- axe.d.ts                           | 23 -----------------------
- typings/axe-core/axe-core-tests.ts |  3 ---
- 2 files changed, 26 deletions(-)
+ axe.d.ts                           | 28 +---------------------------
+ typings/axe-core/axe-core-tests.ts |  6 +-----
+ 2 files changed, 2 insertions(+), 32 deletions(-)
 
 diff --git a/axe.d.ts b/axe.d.ts
-index c174b24..41b282d 100644
+index 403e504..60ad656 100644
 --- a/axe.d.ts
 +++ b/axe.d.ts
 @@ -106,20 +106,6 @@ declare namespace axe {
@@ -43,7 +43,19 @@ index c174b24..41b282d 100644
      id: string;
      impact?: ImpactValue;
      tags: TagValue[];
-@@ -295,9 +278,6 @@ declare namespace axe {
+@@ -188,10 +171,7 @@ declare namespace axe {
+     element?: HTMLElement;
+   }
+   interface RuleLocale {
+-    [key: string]: {
+-      description: string;
+-      help: string;
+-    };
++    [key: string]: {};
+   }
+   interface CheckMessages {
+     pass: string | { [key: string]: string };
+@@ -320,9 +300,6 @@ declare namespace axe {
    }
    interface RuleMetadata {
      ruleId: string;
@@ -53,7 +65,7 @@ index c174b24..41b282d 100644
      tags: string[];
      actIds?: string[];
    }
-@@ -370,9 +350,6 @@ declare namespace axe {
+@@ -432,9 +409,6 @@ declare namespace axe {
    }
  
    interface EnvironmentData {
@@ -64,19 +76,22 @@ index c174b24..41b282d 100644
      timestamp: string;
    }
 diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
-index 309dc9e..1475d75 100644
+index bff4ec4..dcb14d6 100644
 --- a/typings/axe-core/axe-core-tests.ts
 +++ b/typings/axe-core/axe-core-tests.ts
-@@ -265,9 +265,6 @@ var spec: axe.Spec = {
-       id: 'custom-rule',
-       any: ['custom-check'],
-       metadata: {
+@@ -282,11 +282,7 @@ var spec: axe.Spec = {
+       },
+       tags: ['a'],
+       actIds: ['b'],
+-      metadata: {
 -        description: 'custom rule',
 -        help: 'different help',
--        helpUrl: 'https://example.com',
-         tags: ['custom']
-       }
+-        helpUrl: 'https://example.com'
+-      }
++      metadata: {}
      }
+   ]
+ };
 -- 
 2.39.2 (Apple Git-143)
 

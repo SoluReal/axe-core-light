@@ -1,19 +1,18 @@
-From 2a4f4af1eebbba3c97ea6e8bec14d397cdbd498a Mon Sep 17 00:00:00 2001
+From e8126397c2858f336c2a4204f7ef6aca7b6d6a16 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 16:35:11 +0200
-Subject: [PATCH] remove failureSummary.
+Date: Thu, 7 Sep 2023 09:43:16 +0200
+Subject: [PATCH] remove failureSummary
 
 ---
  build/configure.js                  | 16 ----------------
  lib/core/base/audit.js              |  8 --------
  lib/core/public/run-virtual-rule.js |  7 -------
- lib/core/reporters/helpers/index.js |  3 +--
  lib/core/reporters/v1.js            | 11 +----------
  test/core/reporters/v1.js           |  8 --------
- 6 files changed, 2 insertions(+), 51 deletions(-)
+ 5 files changed, 1 insertion(+), 49 deletions(-)
 
 diff --git a/build/configure.js b/build/configure.js
-index 79ff1b5..154d825 100644
+index d499898..23d7781 100644
 --- a/build/configure.js
 +++ b/build/configure.js
 @@ -133,20 +133,6 @@ function buildRules(grunt, options, commons, callback) {
@@ -42,15 +41,15 @@ index 79ff1b5..154d825 100644
  ${ruleTables}`;
  
 -    // Translate failureSummaries
--    metadata.failureSummaries = createFailureSummaryObject(result.misc);
-     metadata.incompleteFallbackMessage = getIncompleteMsg(result.misc);
+-    metadata.failureSummaries = createFailureSummaryObject(build.misc);
+     metadata.incompleteFallbackMessage = getIncompleteMsg(build.misc);
  
      callback({
 diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
-index cc388be..b65ae88 100644
+index 09f8891..fee213e 100644
 --- a/lib/core/base/audit.js
 +++ b/lib/core/base/audit.js
-@@ -194,7 +194,6 @@ class Audit {
+@@ -43,7 +43,6 @@ export default class Audit {
      const locale = {
        checks: {},
        rules: {},
@@ -58,7 +57,7 @@ index cc388be..b65ae88 100644
        incompleteFallbackMessage: '',
        lang: this.lang
      };
-@@ -218,13 +217,6 @@ class Audit {
+@@ -67,13 +66,6 @@ export default class Audit {
        const { description, help } = rule;
        locale.rules[id] = { description, help };
      }
@@ -96,17 +95,6 @@ index 189720f..d2ece29 100644
    return {
      ...getEnvironmentData(),
      ...results,
-diff --git a/lib/core/reporters/helpers/index.js b/lib/core/reporters/helpers/index.js
-index 233e349..32b2298 100644
---- a/lib/core/reporters/helpers/index.js
-+++ b/lib/core/reporters/helpers/index.js
-@@ -1,5 +1,4 @@
--import failureSummary from './failure-summary';
- import incompleteFallbackMessage from './incomplete-fallback-msg';
- import processAggregate from './process-aggregate';
- 
--export { failureSummary, incompleteFallbackMessage, processAggregate };
-+export { incompleteFallbackMessage, processAggregate };
 diff --git a/lib/core/reporters/v1.js b/lib/core/reporters/v1.js
 index 10d939c..15a3783 100644
 --- a/lib/core/reporters/v1.js

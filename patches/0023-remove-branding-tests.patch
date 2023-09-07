@@ -1,6 +1,6 @@
-From 4791dd4b43a4b1dab238fee1c76f5c2a7dbe3b66 Mon Sep 17 00:00:00 2001
+From 42e8a4f25952675d98456ab93abfe0a5968ef9f4 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 16:17:45 +0200
+Date: Thu, 7 Sep 2023 09:36:59 +0200
 Subject: [PATCH] remove branding tests
 
 ---
@@ -8,15 +8,15 @@ Subject: [PATCH] remove branding tests
  1 file changed, 29 deletions(-)
 
 diff --git a/test/core/base/audit.js b/test/core/base/audit.js
-index 59c9048..01a4014 100644
+index a126106..ede8cde 100644
 --- a/test/core/base/audit.js
 +++ b/test/core/base/audit.js
-@@ -173,35 +173,6 @@ describe('Audit', function () {
+@@ -168,35 +168,6 @@ describe('Audit', () => {
        audit.resetRulesAndChecks();
        assert.equal(audit.lang, 'en');
      });
--    it('should reset brand', function () {
--      var audit = new Audit();
+-    it('should reset brand', () => {
+-      audit = new Audit();
 -      assert.equal(audit.brand, 'axe');
 -      audit.setBranding({
 -        brand: 'test'
@@ -25,8 +25,8 @@ index 59c9048..01a4014 100644
 -      audit.resetRulesAndChecks();
 -      assert.equal(audit.brand, 'axe');
 -    });
--    it('should reset brand application', function () {
--      var audit = new Audit();
+-    it('should reset brand application', () => {
+-      audit = new Audit();
 -      assert.equal(audit.application, 'axeAPI');
 -      audit.setBranding({
 -        application: 'test'
@@ -35,7 +35,7 @@ index 59c9048..01a4014 100644
 -      audit.resetRulesAndChecks();
 -      assert.equal(audit.application, 'axeAPI');
 -    });
--    it('should reset brand tagExlcude', function () {
+-    it('should reset brand tagExlcude', () => {
 -      axe._load({});
 -      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
 -      axe.configure({
@@ -45,8 +45,8 @@ index 59c9048..01a4014 100644
 -      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
 -    });
  
-     it('should reset noHtml', function () {
-       var audit = new Audit();
+     it('should reset noHtml', () => {
+       audit = new Audit();
 -- 
 2.39.2 (Apple Git-143)
 

@@ -1,6 +1,6 @@
-From 50055ce2a7393346af16eb0bd27578889e14aba0 Mon Sep 17 00:00:00 2001
+From 9697b1ea3421e8c64b9b0fe3564ca9cba5c1296b Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 16:17:01 +0200
+Date: Thu, 7 Sep 2023 09:35:15 +0200
 Subject: [PATCH] remove setBranding test
 
 ---
@@ -8,16 +8,16 @@ Subject: [PATCH] remove setBranding test
  1 file changed, 31 deletions(-)
 
 diff --git a/test/core/base/audit.js b/test/core/base/audit.js
-index 3498ba1..59c9048 100644
+index 5129651..a126106 100644
 --- a/test/core/base/audit.js
 +++ b/test/core/base/audit.js
-@@ -108,37 +108,6 @@ describe('Audit', function () {
+@@ -103,37 +103,6 @@ describe('Audit', () => {
      });
    });
  
--  describe('Audit#setBranding', function () {
--    it('should change the brand', function () {
--      var audit = new Audit();
+-  describe('Audit#setBranding', () => {
+-    it('should change the brand', () => {
+-      audit = new Audit();
 -      assert.equal(audit.brand, 'axe');
 -      assert.equal(audit.application, 'axeAPI');
 -      audit.setBranding({
@@ -26,8 +26,8 @@ index 3498ba1..59c9048 100644
 -      assert.equal(audit.brand, 'thing');
 -      assert.equal(audit.application, 'axeAPI');
 -    });
--    it('should change the application', function () {
--      var audit = new Audit();
+-    it('should change the application', () => {
+-      audit = new Audit();
 -      assert.equal(audit.brand, 'axe');
 -      assert.equal(audit.application, 'axeAPI');
 -      audit.setBranding({
@@ -36,8 +36,8 @@ index 3498ba1..59c9048 100644
 -      assert.equal(audit.brand, 'axe');
 -      assert.equal(audit.application, 'thing');
 -    });
--    it('should change the application when passed a string', function () {
--      var audit = new Audit();
+-    it('should change the application when passed a string', () => {
+-      audit = new Audit();
 -      assert.equal(audit.brand, 'axe');
 -      assert.equal(audit.application, 'axeAPI');
 -      audit.setBranding('thing');
@@ -46,9 +46,9 @@ index 3498ba1..59c9048 100644
 -    });
 -  });
 -
-   describe('Audit#addRule', function () {
-     it('should override existing rule', function () {
-       var audit = new Audit();
+   describe('Audit#addRule', () => {
+     it('should override existing rule', () => {
+       audit = new Audit();
 -- 
 2.39.2 (Apple Git-143)
 

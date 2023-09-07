@@ -1,0 +1,40 @@
+From ce6d6cb15eb665fb472900089b12afabc99c05fb Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 7 Sep 2023 09:45:08 +0200
+Subject: [PATCH] remove mergeFailureMessages
+
+---
+ lib/core/base/audit.js | 17 -----------------
+ 1 file changed, 17 deletions(-)
+
+diff --git a/lib/core/base/audit.js b/lib/core/base/audit.js
+index fee213e..1f11767 100644
+--- a/lib/core/base/audit.js
++++ b/lib/core/base/audit.js
+@@ -595,23 +595,6 @@ const mergeRuleLocale = (a, b) => {
+   };
+ };
+ 
+-/**
+- * Merge two failure messages (a, b), favoring `b`.
+- */
+-
+-const mergeFailureMessage = (a, b) => {
+-  let { failureMessage } = b;
+-  // If the message(s) are Strings, they have not yet been run
+-  // thru doT (which will return a Function).
+-  if (typeof failureMessage === 'string' && dotRegex.test(failureMessage)) {
+-    failureMessage = doT.compile(failureMessage);
+-  }
+-  return {
+-    ...a,
+-    failureMessage: failureMessage || a.failureMessage
+-  };
+-};
+-
+ /**
+  * Merge two incomplete fallback messages (a, b), favoring `b`.
+  */
+-- 
+2.39.2 (Apple Git-143)
+
