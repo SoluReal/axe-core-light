@@ -1,0 +1,31 @@
+From 3c27d110354f8b00c91dcc000ac2a4bb1143376f Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Wed, 13 Dec 2023 17:45:11 +0100
+Subject: [PATCH] don't need the extra checks in setupGlobals
+
+---
+ lib/core/public/run.js | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/lib/core/public/run.js b/lib/core/public/run.js
+index 74983c7..ba17a44 100644
+--- a/lib/core/public/run.js
++++ b/lib/core/public/run.js
+@@ -1,6 +1,5 @@
+ import { getReporter } from './reporter';
+ import normalizeRunParams from './run/normalize-run-params';
+-import { setupGlobals } from './run/globals-setup';
+ import { assert } from '../utils';
+ 
+ const noop = () => {};
+@@ -17,7 +16,6 @@ const noop = () => {};
+  * @return {Promise}           Resolves with the axe results. Only available when natively supported
+  */
+ export default function run(...args) {
+-  setupGlobals(args[0]);
+   const { context, options, callback = noop } = normalizeRunParams(args);
+   const { thenable, resolve, reject } = getPromiseHandlers(callback);
+   try {
+-- 
+2.39.3 (Apple Git-145)
+
