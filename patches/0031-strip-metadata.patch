@@ -11,7 +11,7 @@ diff --git a/build/build-manual.js b/build/build-manual.js
 index d86ee1d..5981969 100644
 --- a/build/build-manual.js
 +++ b/build/build-manual.js
-@@ -13,6 +13,35 @@ module.exports = function build(grunt, options, commons, callback) {
+@@ -13,6 +13,33 @@ module.exports = function build(grunt, options, commons, callback) {
      var files = grunt.file.expand(src);
      return files.map(function (file) {
        var json = grunt.file.readJSON(file);
@@ -37,8 +37,6 @@ index d86ee1d..5981969 100644
 +            return [[key, metadata]];
 +          } else if (key === 'incompleteFallbackMessage') {
 +            return [];
-+          } else if (key === 'tags') {
-+            return [[key, value.filter(tag => tag.startsWith('wcag'))]];
 +          } else {
 +            return [[key, value]];
 +          }

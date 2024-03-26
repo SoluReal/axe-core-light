@@ -4,10 +4,6 @@ Date: Thu, 10 Aug 2023 16:23:11 +0200
 Subject: [PATCH] remove failure message from axe.d.ts
 
 ---
- axe.d.ts                           | 1 -
- typings/axe-core/axe-core-tests.ts | 1 -
- 2 files changed, 2 deletions(-)
-
 diff --git a/axe.d.ts b/axe.d.ts
 index 41b282d..f0ff2ae 100644
 --- a/axe.d.ts
@@ -20,18 +16,6 @@ index 41b282d..f0ff2ae 100644
      element?: HTMLElement;
    }
    interface CheckResult {
-diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
-index 1475d75..be1f954 100644
---- a/typings/axe-core/axe-core-tests.ts
-+++ b/typings/axe-core/axe-core-tests.ts
-@@ -12,7 +12,6 @@ axe.run(context, {}, (error: Error, results: axe.AxeResults) => {
-   console.log(results.incomplete.length);
-   console.log(results.inapplicable.length);
-   console.log(results.violations.length);
--  console.log(results.violations[0].nodes[0].failureSummary);
- });
- axe.run().then(function (done: any) {
-   done();
 -- 
 2.39.2 (Apple Git-143)
 

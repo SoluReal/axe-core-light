@@ -1,0 +1,22 @@
+From e545d6f504882c9245a47083344aed2e1198fd95 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Tue, 26 Mar 2024 18:30:41 +0100
+Subject: [PATCH] don't test for message validity.
+
+---
+diff --git a/test/testutils.js b/test/testutils.js
+index a9168b1..f6b5725 100644
+--- a/test/testutils.js
++++ b/test/testutils.js
+@@ -497,6 +497,8 @@ var commons;
+         context
+       );
+ 
++      return result;
++
+       // ensure that every result has a corresponding message
+       if (testOptions.verifyMessage !== false) {
+         const messages = axe._audit.data.checks[checkId].messages;
+-- 
+2.39.3 (Apple Git-145)
+

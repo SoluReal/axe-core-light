@@ -4,10 +4,6 @@ Date: Thu, 7 Sep 2023 09:16:42 +0200
 Subject: [PATCH] change ts typings.
 
 ---
- axe.d.ts                           | 28 +---------------------------
- typings/axe-core/axe-core-tests.ts |  6 +-----
- 2 files changed, 2 insertions(+), 32 deletions(-)
-
 diff --git a/axe.d.ts b/axe.d.ts
 index 403e504..60ad656 100644
 --- a/axe.d.ts
@@ -75,23 +71,4 @@ index 403e504..60ad656 100644
      url: string;
      timestamp: string;
    }
-diff --git a/typings/axe-core/axe-core-tests.ts b/typings/axe-core/axe-core-tests.ts
-index bff4ec4..dcb14d6 100644
---- a/typings/axe-core/axe-core-tests.ts
-+++ b/typings/axe-core/axe-core-tests.ts
-@@ -282,11 +282,7 @@ var spec: axe.Spec = {
-       },
-       tags: ['a'],
-       actIds: ['b'],
--      metadata: {
--        description: 'custom rule',
--        help: 'different help',
--        helpUrl: 'https://example.com'
--      }
-+      metadata: {}
-     }
-   ]
- };
--- 
-2.39.2 (Apple Git-143)
-
+---
