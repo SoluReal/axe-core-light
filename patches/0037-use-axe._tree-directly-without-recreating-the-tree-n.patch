@@ -1,0 +1,25 @@
+From f45144519ab6fa2b762ca32c371bd3cd31811378 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 14 Dec 2023 11:45:55 +0100
+Subject: [PATCH] use axe._tree directly without recreating the tree, now
+ requires setup to be called before run.
+
+---
+ lib/core/base/context.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/core/base/context.js b/lib/core/base/context.js
+index 6375bc3..4263538 100644
+--- a/lib/core/base/context.js
++++ b/lib/core/base/context.js
+@@ -43,7 +43,7 @@ export default function Context(spec, flatTree) {
+   spec = normalizeContext(spec);
+ 
+   // cache the flattened tree
+-  this.flatTree = flatTree ?? getFlattenedTree(getRootNode(spec));
++  this.flatTree = flatTree ?? axe._tree ?? getFlattenedTree(getRootNode(spec));
+   this.exclude = spec.exclude;
+   this.include = spec.include;
+ 
+-- 
+

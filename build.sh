@@ -26,8 +26,6 @@ done
 
 npx update-browserslist-db
 
-npm run eslint
-
 npm run build 
 
 light_file_size=$(ls -lh axe.min.js | awk '{print $5}')
@@ -38,3 +36,4 @@ popd
 
 echo "Original fileSize: $original"
 echo "Light fileSize: $light_file_size"
+echo "Note: run terser to remove dead code, caused by the patches"

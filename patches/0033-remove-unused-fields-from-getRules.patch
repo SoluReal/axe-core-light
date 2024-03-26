@@ -1,34 +1,26 @@
-From 04b268a6510a33474abb7963b89f52444c3ea3ba Mon Sep 17 00:00:00 2001
+From 4f11bc4d26e8521aca54f54e6a91acf64e46097d Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Fri, 11 Aug 2023 12:06:07 +0200
-Subject: [PATCH] remove unused fields from getRules.
+Date: Thu, 14 Dec 2023 12:24:47 +0100
+Subject: [PATCH] remove unused fields from getRules
 
 ---
- lib/core/public/get-rules.js | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ lib/core/public/get-rules.js | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/lib/core/public/get-rules.js b/lib/core/public/get-rules.js
-index d52216f..eb1ec27 100644
+index d52216f..46df685 100644
 --- a/lib/core/public/get-rules.js
 +++ b/lib/core/public/get-rules.js
-@@ -13,16 +13,10 @@ function getRules(tags) {
-         }).length;
-       });
- 
--  var ruleData = axe._audit.data.rules || {};
-   return matchingRules.map(matchingRule => {
--    var rd = ruleData[matchingRule.id] || {};
+@@ -18,9 +18,6 @@ function getRules(tags) {
+     var rd = ruleData[matchingRule.id] || {};
      return {
        ruleId: matchingRule.id,
 -      description: rd.description,
 -      help: rd.help,
 -      helpUrl: rd.helpUrl,
--      tags: matchingRule.tags,
--      actIds: matchingRule.actIds
-+      tags: matchingRule.tags
+       tags: matchingRule.tags,
+       actIds: matchingRule.actIds
      };
-   });
- }
 -- 
-2.39.2 (Apple Git-143)
+2.39.3 (Apple Git-145)
 

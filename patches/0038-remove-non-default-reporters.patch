@@ -1,0 +1,37 @@
+From fca07b2a9c6fc3ac042cb06690de6fc638b285e7 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 14 Dec 2023 11:59:55 +0100
+Subject: [PATCH] remove non default reporters
+
+---
+ lib/core/core.js | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/lib/core/core.js b/lib/core/core.js
+index 19dedc2..3fbfca5 100644
+--- a/lib/core/core.js
++++ b/lib/core/core.js
+@@ -24,11 +24,6 @@ import finishRun from './public/finish-run';
+ import setup from './public/setup';
+ import teardown from './public/teardown';
+ 
+-import naReporter from './reporters/na';
+-import noPassesReporter from './reporters/no-passes';
+-import rawEnvReporter from './reporters/raw-env';
+-import rawReporter from './reporters/raw';
+-import v1Reporter from './reporters/v1';
+ import v2Reporter from './reporters/v2';
+ 
+ import * as commons from '../commons';
+@@ -69,9 +64,4 @@ axe.finishRun = finishRun;
+ axe.commons = commons;
+ axe.utils = utils;
+ 
+-axe.addReporter('na', naReporter);
+-axe.addReporter('no-passes', noPassesReporter);
+-axe.addReporter('rawEnv', rawEnvReporter);
+-axe.addReporter('raw', rawReporter);
+-axe.addReporter('v1', v1Reporter);
+ axe.addReporter('v2', v2Reporter, true);
+-- 
+

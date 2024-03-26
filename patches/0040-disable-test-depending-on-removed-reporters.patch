@@ -1,0 +1,24 @@
+From 435b24d87660496da4cf7570349be436184cb040 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Thu, 14 Dec 2023 12:03:40 +0100
+Subject: [PATCH] disable test depending on removed reporters
+
+---
+ test/core/public/reset.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/core/public/reset.js b/test/core/public/reset.js
+index 93fc555..c02f40a 100644
+--- a/test/core/public/reset.js
++++ b/test/core/public/reset.js
+@@ -24,7 +24,7 @@ describe('axe.reset', function () {
+     );
+   });
+ 
+-  it('should restore the default configuration', function () {
++  it.skip('should restore the default configuration', function () {
+     axe._load({
+       data: {
+         rules: {
+-- 
+

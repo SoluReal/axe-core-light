@@ -35,7 +35,7 @@ index d86ee1d..5981969 100644
 +              metadata = { ...metadata, messages: value.messages };
 +            }
 +            return [[key, metadata]];
-+          } else if (key === 'incompleteFallbackMessage' || key === 'actIds') {
++          } else if (key === 'incompleteFallbackMessage') {
 +            return [];
 +          } else if (key === 'tags') {
 +            return [[key, value.filter(tag => tag.startsWith('wcag'))]];
