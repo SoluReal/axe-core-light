@@ -1,0 +1,26 @@
+From 15736929c8c2a972ebb74e474d0b6c1bc3047434 Mon Sep 17 00:00:00 2001
+From: ArjanSchouten <arjan.schouten@solureal.com>
+Date: Mon, 6 May 2024 20:10:40 +0200
+Subject: [PATCH] dont use polyfill for Array.from
+
+---
+ lib/core/imports/index.js | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/core/imports/index.js b/lib/core/imports/index.js
+index 1c0ae98..cdcc128 100644
+--- a/lib/core/imports/index.js
++++ b/lib/core/imports/index.js
+@@ -4,7 +4,8 @@ import doT from '@deque/dot';
+ import emojiRegexText from 'emoji-regex';
+ import memoize from 'memoizee';
+ import Color from 'colorjs.io';
+-import ArrayFrom from 'core-js-pure/actual/array/from';
++
++const ArrayFrom = Array.from
+ 
+ // prevent striping newline characters from strings (e.g. failure
+ // summaries). value must be synced with build/configure.js
+-- 
+2.39.3 (Apple Git-146)
+
