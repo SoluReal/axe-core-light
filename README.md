@@ -23,7 +23,7 @@ The patches make the following adjustments:
 
 |                                 | axe-core | axe-core light |
 |---------------------------------|----------|----------------|
-| File size                       | 546K     | 423K           |
+| File size                       | 540K     | 423K           |
 | Output size (small sample page) | 80.9K    | 46.6K          |
 
 Note, we just stripped functionality and compatibility of axe-core and might not work for you!
