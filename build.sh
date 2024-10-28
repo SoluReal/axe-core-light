@@ -2,7 +2,7 @@
 
 set -e
 
-AXE_VERSION=4.9.1
+AXE_VERSION=4.10.2
 
 # Cleanup old checkout if any
 rm -rf axe-core
@@ -26,7 +26,7 @@ done
 
 npx update-browserslist-db
 
-npm run build 
+npm run build
 
 light_file_size=$(ls -lh axe.min.js | awk '{print $5}')
 

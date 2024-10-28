@@ -1,6 +1,6 @@
-From 42e8a4f25952675d98456ab93abfe0a5968ef9f4 Mon Sep 17 00:00:00 2001
+From e73c2ae76cd8e79aecf1f262bad7142caf17a22d Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 7 Sep 2023 09:36:59 +0200
+Date: Mon, 28 Oct 2024 22:04:24 +0100
 Subject: [PATCH] remove branding tests
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] remove branding tests
  1 file changed, 29 deletions(-)
 
 diff --git a/test/core/base/audit.js b/test/core/base/audit.js
-index a126106..ede8cde 100644
+index 156397c..ede8cde 100644
 --- a/test/core/base/audit.js
 +++ b/test/core/base/audit.js
 @@ -168,35 +168,6 @@ describe('Audit', () => {
@@ -37,16 +37,16 @@ index a126106..ede8cde 100644
 -    });
 -    it('should reset brand tagExlcude', () => {
 -      axe._load({});
--      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
+-      assert.deepEqual(axe._audit.tagExclude, ['experimental', 'deprecated']);
 -      axe.configure({
 -        tagExclude: ['ninjas']
 -      });
 -      axe._audit.resetRulesAndChecks();
--      assert.deepEqual(axe._audit.tagExclude, ['experimental']);
+-      assert.deepEqual(axe._audit.tagExclude, ['experimental', 'deprecated']);
 -    });
  
      it('should reset noHtml', () => {
        audit = new Audit();
 -- 
-2.39.2 (Apple Git-143)
+2.39.5 (Apple Git-154)
 

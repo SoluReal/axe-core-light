@@ -1,6 +1,6 @@
-From c21fdb412b7e518265610084978bd6531c076c0e Mon Sep 17 00:00:00 2001
+From 419c877baa5172ef05d1e52e105d773ba21a5ed5 Mon Sep 17 00:00:00 2001
 From: ArjanSchouten <arjan.schouten@solureal.com>
-Date: Thu, 10 Aug 2023 17:10:24 +0200
+Date: Mon, 28 Oct 2024 22:06:46 +0100
 Subject: [PATCH] browserlist
 
 ---
@@ -8,17 +8,17 @@ Subject: [PATCH] browserlist
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/package.json b/package.json
-index 3caafd2..b31f08e 100644
+index 8d32c61..9f62d39 100644
 --- a/package.json
 +++ b/package.json
-@@ -186,5 +186,6 @@
-       "eslint --fix",
-       "prettier --write"
+@@ -197,5 +197,6 @@
+       "prettier --write",
+       "eslint --fix"
      ]
 -  }
 +  },
 +  "browserslist": "last 2 Chrome versions"
  }
 -- 
-2.39.2 (Apple Git-143)
+2.39.5 (Apple Git-154)
 
