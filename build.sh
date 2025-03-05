@@ -2,7 +2,7 @@
 
 set -e
 
-AXE_VERSION=4.10.2
+AXE_VERSION=4.10.3
 
 # Cleanup old checkout if any
 rm -rf axe-core
